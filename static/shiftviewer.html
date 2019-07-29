@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SiSa Schichten</title>
+        <meta charset="UTF-8">
+        <style>
+            .key {
+                font-weight: bold
+            }
+            ul.kv {
+                list-style-type: none;
+                padding-left: 0;
+            }
+        </style>
+    <link rel="stylesheet" type="text/css" href="vue-good-table.esm.css">
+    </head>
+    <body>
+        <h1>SiSa Helferschichten</h1>
+        <div id="app">
+            <p>Insgesamt {{ totalShifts }} Schichten, davon {{ minorShifts }} U18-tauglich.</p>
+        <vue-good-table
+            :columns="columns"
+            :rows="shifts"
+            @on-cell-click="onCellClick"
+            class="vgt-table condensed striped">
+        </vue-good-table>
+        <!--
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Datum</th>
+                        <th>Schichtbeginn</th>
+                        <th>Schichtende</th>
+                        <th>U18</th>
+                        <th>Helfer ben&ouml;tigt</th>
+                    </tr>
+                </thead>
+                <tbody>
+            <shift-info
+                v-for="shift in shifts"
+                v-bind:shift="shift"
+                v-bind:key="shift.id">
+            </shift-info>
+                </tbody>
+            </table>
+        -->
+        </div>
+        <script id="shift-info-template" type="text/x-vue-template">
+            <tr>
+                <td>{{ shift.name }}</td>
+                <td>{{ germanDate }}</td>
+                <td>{{ shift.starts }}</td>
+                <td>{{ shift.ends }}</td>
+                <td>{{ shift.minors ? 'ja' : 'nein' }}</td>
+                <td>{{ shift.volunteers }}</td>
+            </tr>
+        </script>
+        <script id="shift-info-template-old" type="text/x-vue-template">
+            <div>
+                <h2>{{ shift.name }}</h2>
+                <ul class="kv">
+                    <li><span class="key">Datum:</span> {{ germanDate }}</li>
+                    <li><span class="key">Schichtbeginn:</span> {{ shift.starts }}</li>
+                    <li><span class="key">Schichtende:</span> {{ shift.ends }}</li>
+                    <li><span class="key">U18:</span> {{ shift.minors ? 'ja' : 'nein' }}</li>
+                    <li><span class="key">Helfer ben&ouml;tigt:</span> {{ shift.volunteers }}</li>
+                </ul>
+            </div>
+        </script>
+        <script src="vue.js"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+        <script type='module'>
+            'use strict';
+
+            import VueGoodTablePlugin from './vue-good-table.esm.js'
+
+            Vue.use(VueGoodTablePlugin);
+            Vue.component('shift-info', {
+                props: ['shift'],
+                template: document.querySelector("#shift-info-template").textContent,
+                computed: {
+                    germanDate: function() {
+                        return this.shift.date.split('-').reverse().join('.');
+                    }
+                }
+            });
+            var app = new Vue({
+                el: "#app",
+                data: {
+                    columns: [
+                        { label: 'ID', field: 'id', type: 'number' },
+                        { label: 'Name', field: 'name' },
+                        { label: 'Datum', field: 'date', type: 'date', dateInputFormat: 'YYYY-MM-DD', dateOutputFormat: 'DD.MM.YYYY' },
+                        { label: 'Schichtbeginn', field: 'starts', tdClass: 'vgt-right-align' },
+                        { label: 'Schichtende', field: 'ends', tdClass: 'vgt-right-align' },
+                        { label: 'U18', field: 'minors', type: 'boolean', formatFn: (value) => value ? "\u2714" : "\u2716", tdClass: 'vgt-center-align' },
+                        { label: 'Anzahl Helfer', field: 'volunteers', type: 'number' },
+                        { label: 'Faktor', field: 'multiplier', type: 'number' }
+                    ],
+                    shifts: []
+                },
+                computed: {
+                    totalShifts: function() {
+                        return this.shifts.map((obj) => obj.volunteers).reduce((a, b) => a + b, 0);
+                    },
+                    minorShifts: function() {
+                        return this.shifts.filter((obj) => obj.minors).map((obj) => obj.volunteers).reduce((a, b) => a + b, 0);
+                    }
+                },
+                methods: {
+                    formatBool: function(value) {
+                        return value ? "\u2714" : "\u2716";
+                    },
+                    onCellClick: function(params) {
+                        console.log(params);
+                        //params.row.volunteers = 0;
+                    }
+                }
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var obj = JSON.parse(xhr.responseText);
+                app.shifts = obj.shifts;
+            };
+            xhr.open('GET', '/sisa_shifts.json');
+            xhr.send();
+            window.app = app;
+        </script>
+    </body>
+</html>

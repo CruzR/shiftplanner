@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://tuxcraft.de/shiftplanner.schema.json",
+    "title": "Shift Definitions",
+    "description": "A list of shift definitions",
+    "type": "object",
+    "properties": {
+        "shifts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier for a shift",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "Human-readable name of the shift",
+                        "type": "string"
+                    },
+                    "date": {
+                        "description": "Date of the shift",
+                        "type": "string",
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "starts": {
+                        "description": "Time at which shift starts",
+                        "type": "string",
+                        "pattern": "^\\d{2}:\\d{2}$"
+                    },
+                    "ends": {
+                        "description": "Time at which shift ends",
+                        "type": "string",
+                        "pattern": "^\\d{2}:\\d{2}$"
+                    },
+                    "minors": {
+                        "description": "Whether minors are allowed to work that shift",
+                        "type": "boolean"
+                    },
+                    "volunteers": {
+                        "description": "How many volunteers are required",
+                        "type": "integer"
+                    },
+                    "multiplier": {
+                        "description": "How many standard shifts this shift is worth",
+                        "type": "integer"
+                    }
+                },
+                "required": ["id", "name", "date", "starts", "ends", "minors", "volunteers", "multiplier"]
+            }
+        }
+    }
+}

@@ -1,0 +1,314 @@
+{
+    "shifts": [
+        {
+            "id": 1,
+            "name": "Bar Do 13:30 - 20:00",
+            "date": "2019-08-20",
+            "starts": "13:30",
+            "ends": "20:00",
+            "minors": false,
+            "volunteers": 15,
+            "multiplier": 1
+        },
+        {
+            "id": 2,
+            "name": "Bar Fr 13:30 - 19:30",
+            "date": "2019-08-21",
+            "starts": "13:30",
+            "ends": "19:30",
+            "minors": false,
+            "volunteers": 16,
+            "multiplier": 1
+        },
+        {
+            "id": 3,
+            "name": "Bar Fr 19:00 - 02:00",
+            "date": "2019-08-21",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 21,
+            "multiplier": 1
+        },
+        {
+            "id": 4,
+            "name": "Bar Sa 13:30 - 19:30",
+            "date": "2019-08-22",
+            "starts": "13:30",
+            "ends": "19:30",
+            "minors": false,
+            "volunteers": 18,
+            "multiplier": 1
+        },
+        {
+            "id": 5,
+            "name": "Bar Sa 19:00 - 02:00",
+            "date": "2019-08-22",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 21,
+            "multiplier": 1
+        },
+        {
+            "id": 6,
+            "name": "Merch Do 13:30 - 20:00",
+            "date": "2019-08-20",
+            "starts": "13:30",
+            "ends": "20:00",
+            "minors": true,
+            "volunteers": 4,
+            "multiplier": 1
+        },
+        {
+            "id": 7,
+            "name": "Merch Fr 13:30 - 19:30",
+            "date": "2019-08-21",
+            "starts": "13:30",
+            "ends": "19:30",
+            "minors": true,
+            "volunteers": 4,
+            "multiplier": 1
+        },
+        {
+            "id": 8,
+            "name": "Merch Fr 19:00 - 02:00",
+            "date": "2019-08-21",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 4,
+            "multiplier": 1
+        },
+        {
+            "id": 9,
+            "name": "Merch Sa 13:30 - 19:30",
+            "date": "2019-08-22",
+            "starts": "13:30",
+            "ends": "19:30",
+            "minors": true,
+            "volunteers": 4,
+            "multiplier": 1
+        },
+        {
+            "id": 10,
+            "name": "Merch Sa 19:00 - 02:00",
+            "date": "2019-08-22",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 4,
+            "multiplier": 1
+        },
+        {
+            "id": 11,
+            "name": "Camping Fr 12:00 - 20:00",
+            "date": "2019-08-21",
+            "starts": "12:00",
+            "ends": "20:00",
+            "minors": true,
+            "volunteers": 5,
+            "multiplier": 1
+        },
+        {
+            "id": 12,
+            "name": "Camping Sa 08:30 - 12:00",
+            "date": "2019-08-22",
+            "starts": "08:30",
+            "ends": "12:00",
+            "minors": true,
+            "volunteers": 3,
+            "multiplier": 1
+        },
+        {
+            "id": 13,
+            "name": "Camping Sa 14:00 - 15:00",
+            "date": "2019-08-22",
+            "starts": "14:00",
+            "ends": "15:00",
+            "minors": true,
+            "volunteers": 3,
+            "multiplier": 1
+        },
+        {
+            "id": 14,
+            "name": "Camping So 08:00 - 14:00",
+            "date": "2019-08-23",
+            "starts": "08:00",
+            "ends": "14:00",
+            "minors": true,
+            "volunteers": 6,
+            "multiplier": 1
+        },
+        {
+            "id": 15,
+            "name": "Einlass Do 13:30 - 20:00",
+            "date": "2019-08-20",
+            "starts": "13:30",
+            "ends": "20:00",
+            "minors": true,
+            "volunteers": 10,
+            "multiplier": 1
+        },
+        {
+            "id": 16,
+            "name": "Einlass Fr 13:30 - 19:30",
+            "date": "2019-08-21",
+            "starts": "13:30",
+            "ends": "19:30",
+            "minors": true,
+            "volunteers": 12,
+            "multiplier": 1
+        },
+        {
+            "id": 17,
+            "name": "Einlass Fr 19:00 - 02:00",
+            "date": "2019-08-21",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 12,
+            "multiplier": 1
+        },
+        {
+            "id": 18,
+            "name": "Einlass Sa 13:30 - 19:30",
+            "date": "2019-08-22",
+            "starts": "13:30",
+            "ends": "19:30",
+            "minors": true,
+            "volunteers": 12,
+            "multiplier": 1
+        },
+        {
+            "id": 19,
+            "name": "Einlass Sa 19:00 - 02:00",
+            "date": "2019-08-22",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 12,
+            "multiplier": 1
+        },
+        {
+            "id": 20,
+            "name": "Troubleshooter Do 13:30 - 20:00",
+            "date": "2019-08-20",
+            "starts": "13:30",
+            "ends": "20:00",
+            "minors": true,
+            "volunteers": 9,
+            "multiplier": 1
+        },
+        {
+            "id": 21,
+            "name": "Troubleshooter Fr 13:30 - 19:30",
+            "date": "2019-08-21",
+            "starts": "13:30",
+            "ends": "19:30",
+            "minors": true,
+            "volunteers": 11,
+            "multiplier": 1
+        },
+        {
+            "id": 22,
+            "name": "Troubleshooter Fr 19:00 - 02:00",
+            "date": "2019-08-21",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 10,
+            "multiplier": 1
+        },
+        {
+            "id": 23,
+            "name": "Troubleshooter Sa 13:30 - 19:30",
+            "date": "2019-08-22",
+            "starts": "13:30",
+            "ends": "19:30",
+            "minors": true,
+            "volunteers": 10,
+            "multiplier": 1
+        },
+        {
+            "id": 24,
+            "name": "Troubleshooter Sa 19:00 - 02:00",
+            "date": "2019-08-22",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 10,
+            "multiplier": 1
+        },
+        {
+            "id": 25,
+            "name": "Stagehands Do 12:00 - 20:00",
+            "date": "2019-08-20",
+            "starts": "12:00",
+            "ends": "20:00",
+            "minors": false,
+            "volunteers": 2,
+            "multiplier": 1
+        },
+        {
+            "id": 26,
+            "name": "Stagehands Fr 12:00 - 00:00",
+            "date": "2019-08-21",
+            "starts": "12:00",
+            "ends": "00:00",
+            "minors": false,
+            "volunteers": 7,
+            "multiplier": 2
+        },
+        {
+            "id": 27,
+            "name": "Stagehands Sa 12:00 - 00:00",
+            "date": "2019-08-22",
+            "starts": "12:00",
+            "ends": "00:00",
+            "minors": false,
+            "volunteers": 7,
+            "multiplier": 2
+        },
+        {
+            "id": 28,
+            "name": "Trash Heroes Fr 18:00 - 02:00",
+            "date": "2019-08-21",
+            "starts": "18:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 2,
+            "multiplier": 1
+        },
+        {
+            "id": 29,
+            "name": "Trash Heroes Sa 18:00 - 02:00",
+            "date": "2019-08-22",
+            "starts": "18:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 2,
+            "multiplier": 1
+        },
+        {
+            "id": 30,
+            "name": "Helferbereich Fr 19:00 - 02:00",
+            "date": "2019-08-21",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 2,
+            "multiplier": 1
+        },
+        {
+            "id": 31,
+            "name": "Helferbereich Sa 19:00 - 02:00",
+            "date": "2019-08-22",
+            "starts": "19:00",
+            "ends": "02:00",
+            "minors": false,
+            "volunteers": 2,
+            "multiplier": 1
+        }
+    ]
+}

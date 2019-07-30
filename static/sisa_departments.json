@@ -1,0 +1,12 @@
+{
+    "departments": [
+        { "id": 1, "name": "Bar" },
+        { "id": 2, "name": "Merch" },
+        { "id": 3, "name": "Camping" },
+        { "id": 4, "name": "Einlass" },
+        { "id": 5, "name": "Troubleshooter" },
+        { "id": 6, "name": "Stagehands" },
+        { "id": 7, "name": "Trash Heroes" },
+        { "id": 8, "name": "Crewbereich" }
+    ]
+}

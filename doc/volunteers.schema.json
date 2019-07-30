@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://tuxcraft.de/shiftplanner/volunteers.schema.json",
+    "title": "Volunteer List",
+    "description": "A list of volunteers for the shiftplanner system",
+    "type": "object",
+    "properties": {
+        "volunteers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier for a volunteer",
+                        "type": "integer"
+                    },
+                    "lastname": {
+                        "description": "The lastname of a volunteer",
+                        "type": "string"
+                    },
+                    "firstname": {
+                        "description": "The firstname of a volunteer",
+                        "type": "string"
+                    },
+                    "isminor": {
+                        "description": "Specifies whether a volunteer is a minor",
+                        "type": "boolean"
+                    },
+                    "assigned_shifts": {
+                        "descriptions": "List of shift ids this volunteer is assigned to",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "desired_departments": {
+                        "description": "Departments volunteer wants to be in",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "desired_shifts": {
+                        "description": "Shifts volunteer wants to work in",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "min_shifts": {
+                        "description": "Minimum count of standard shifts required",
+                        "type": "integer"
+                    },
+                    "max_shifts": {
+                        "description": "Maximum count of standard shifts",
+                        "type": "integer"
+                    }
+                },
+                "required": ["id", "lastname", "firstname", "isminor", "assigned_shifts", "min_shifts", "max_shifts"]
+            }
+        }
+    }
+}
+

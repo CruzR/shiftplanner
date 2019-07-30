@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SiSa Helfer</title>
+        <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/vue-good-table.esm.css">
+    </head>
+    <body>
+        <h1>SiSa Helfer</h1>
+        <div id="app">
+        <vue-good-table
+            :columns="columns"
+            :rows="volunteers"
+            @on-cell-click="onCellClick"
+            class="vgt-table condensed striped">
+            <template slot="table-row" slot-scope="props">
+                <span v-if="props.column.field == 'assigned_shifts'">
+                    <span v-for="shift in props.row.assigned_shifts">
+                        <a :href="'/shifts#' + shift">{{shiftName(shift)}}</a>
+                        <br>
+                    </span>
+                </span>
+                <span v-else-if="props.column.field == 'desired_departments'">
+                    <span v-for="dept in props.row.desired_departments">
+                        <a :href="'/departments#' + dept">{{departmentName(dept)}}</a>
+                        <br>
+                    </span>
+                </span>
+                <span v-else-if="props.column.field == 'desired_shifts'">
+                    <span v-for="shift in props.row.desired_shifts">
+                        <a :href="'/shifts#' + shift">{{shiftName(shift)}}</a>
+                        <br>
+                    </span>
+                </span>
+                <span v-else>
+                    {{props.formattedRow[props.column.field]}}
+                </span>
+            </template>
+        </vue-good-table>
+        </div>
+        </script>
+        <script src="/static/vue.js"></script>
+        <script type='module'>
+            'use strict';
+
+            import VueGoodTablePlugin from '/static/vue-good-table.esm.js'
+
+            Vue.use(VueGoodTablePlugin);
+            var app = new Vue({
+                el: "#app",
+                data: {
+                    columns: [
+                        { label: 'ID', field: 'id', type: 'number' },
+                        { label: 'Nachname', field: 'lastname' },
+            { label: 'Vorname', field: 'firstname' },
+                        { label: 'U18', field: 'isminor', type: 'boolean', formatFn: (value) => value ? "\u2714" : "\u2716", tdClass: 'vgt-center-align' },
+            { label: 'Zugewiesene Schichten', field: 'assigned_shifts' },
+            { label: 'Wunschbereiche', field: 'desired_departments' },
+            { label: 'Wunschschichten', field: 'desired_shifts' },
+            { label: "Min. #", field: "min_shifts", type: 'number' },
+            { label: 'Max. #', field: 'max_shifts', type: 'number' }
+                    ],
+                    volunteers: [],
+                    shiftNamesById: {}
+                },
+                computed: {
+                },
+                methods: {
+                    formatBool: function(value) {
+                        return value ? "\u2714" : "\u2716";
+                    },
+                    onCellClick: function(params) {
+                        console.log(params);
+                        //params.row.volunteers = 0;
+                    },
+                    shiftName: function(shiftId) {
+                        return this.shiftNamesById[shiftId]
+                    },
+                    departmentName: function(deptId) {
+                        return this.departmentsById[deptId];
+                    }
+                }
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var obj = JSON.parse(xhr.responseText);
+                var shiftNamesById = {};
+                for (let shift of obj.shifts) {
+                    shiftNamesById[shift.id] = shift.name;
+                }
+                app.shiftNamesById = shiftNamesById;
+                var deptXhr = new XMLHttpRequest();
+                deptXhr.onload = function() {
+                    var depts = JSON.parse(deptXhr.responseText);
+                    var deptsById = {};
+                    for (let dept of depts.departments) {
+                        deptsById[dept.id] = dept.name;
+                    }
+                    app.departmentsById = deptsById;
+
+                    var volunteersXhr = new XMLHttpRequest();
+                    volunteersXhr.onload = function() {
+                        var obj = JSON.parse(volunteersXhr.responseText);
+                        app.volunteers = obj.volunteers;
+                    };
+                    volunteersXhr.open('GET', '/api/volunteers.json');
+                    volunteersXhr.send();
+                }
+                deptXhr.open('GET', '/api/departments.json');
+                deptXhr.send();
+            };
+            xhr.open('GET', '/api/shifts.json');
+            xhr.send();
+            window.app = app;
+        </script>
+    </body>
+</html>

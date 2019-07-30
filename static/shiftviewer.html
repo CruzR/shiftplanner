@@ -12,7 +12,7 @@
                 padding-left: 0;
             }
         </style>
-    <link rel="stylesheet" type="text/css" href="vue-good-table.esm.css">
+    <link rel="stylesheet" type="text/css" href="/static/vue-good-table.esm.css">
     </head>
     <body>
         <h1>SiSa Helferschichten</h1>
@@ -68,12 +68,12 @@
                 </ul>
             </div>
         </script>
-        <script src="vue.js"></script>
+        <script src="/static/vue.js"></script>
         <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
         <script type='module'>
             'use strict';
 
-            import VueGoodTablePlugin from './vue-good-table.esm.js'
+            import VueGoodTablePlugin from '/static/vue-good-table.esm.js'
 
             Vue.use(VueGoodTablePlugin);
             Vue.component('shift-info', {
@@ -123,7 +123,7 @@
                 var obj = JSON.parse(xhr.responseText);
                 app.shifts = obj.shifts;
             };
-            xhr.open('GET', '/sisa_shifts.json');
+            xhr.open('GET', '/api/shifts.json');
             xhr.send();
             window.app = app;
         </script>

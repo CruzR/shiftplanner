@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SiSa Bereiche</title>
+        <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/vue-good-table.esm.css">
+    </head>
+    <body>
+        <h1>SiSa Bereiche</h1>
+        <div id="app">
+        <vue-good-table
+            :columns="columns"
+            :rows="departments"
+            @on-cell-click="onCellClick"
+            class="vgt-table condensed striped">
+        </vue-good-table>
+        </div>
+        </script>
+        <script src="/static/vue.js"></script>
+        <script type='module'>
+            'use strict';
+
+            import VueGoodTablePlugin from '/static/vue-good-table.esm.js'
+
+            Vue.use(VueGoodTablePlugin);
+            var app = new Vue({
+                el: "#app",
+                data: {
+                    columns: [
+                        { label: 'ID', field: 'id', type: 'number' },
+                        { label: 'Name', field: 'name' },
+                    ],
+                    departments: []
+                },
+                computed: {
+                },
+                methods: {
+                    formatBool: function(value) {
+                        return value ? "\u2714" : "\u2716";
+                    },
+                    onCellClick: function(params) {
+                        console.log(params);
+                        //params.row.volunteers = 0;
+                    },
+                    shiftName: function(shiftId) {
+                        return this.shiftNamesById[shiftId]
+                    }
+                }
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var obj = JSON.parse(xhr.responseText);
+                app.departments = obj.departments;
+            };
+            xhr.open('GET', '/api/departments.json');
+            xhr.send();
+            window.app = app;
+        </script>
+    </body>
+</html>

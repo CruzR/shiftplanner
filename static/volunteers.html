@@ -7,6 +7,10 @@
     </head>
     <body>
         <h1>SiSa Helfer</h1>
+        <form method="POST" action="/volunteers" enctype="multipart/form-data">
+            <input type="file" name="volunteers_csv">
+            <input type="submit">
+        </form>
         <div id="app">
         <vue-good-table
             :columns="columns"

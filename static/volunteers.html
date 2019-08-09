@@ -4,6 +4,7 @@
         <title>SiSa Helfer</title>
         <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/vue-good-table.esm.css">
+    <link rel="stylesheet" type="text/css" href="/static/global_styles.css">
     </head>
     <body>
         <h1>SiSa Helfer</h1>
@@ -19,10 +20,14 @@
             class="vgt-table condensed striped">
             <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field == 'assigned_shifts'">
-                    <span v-for="shift in props.row.assigned_shifts">
-                        <a :href="'/shifts#' + shift">{{shiftName(shift)}}</a>
+                    <template v-for="shift in props.row.assigned_shifts">
+                        <span :class="{ manual: shift.manual, shift: true, label: true}">
+                            <a :href="'/shifts#' + shift" class="left label-component">
+                                {{shiftName(shift.id)}}
+                            </a><a href="#" class="delete-btn right label-component">&#10005;</a>
+                        </span>
                         <br>
-                    </span>
+                    </template>
                 </span>
                 <span v-else-if="props.column.field == 'desired_departments'">
                     <span v-for="dept in props.row.desired_departments">
@@ -31,10 +36,12 @@
                     </span>
                 </span>
                 <span v-else-if="props.column.field == 'desired_shifts'">
-                    <span v-for="shift in props.row.desired_shifts">
-                        <a :href="'/shifts#' + shift">{{shiftName(shift)}}</a>
+                    <template v-for="shift in props.row.desired_shifts">
+                        <span class="shift label">
+                            <a :href="'/shifts#' + shift" class="label-component">{{shiftName(shift)}}</a>
+                        </span>
                         <br>
-                    </span>
+                    </template>
                 </span>
                 <span v-else>
                     {{props.formattedRow[props.column.field]}}

@@ -1,0 +1,39 @@
+.label-component {
+    border-radius: 4px;
+}
+
+.left.label-component {
+    border-radius: 4px 0 0 4px;
+}
+
+.right.label-component {
+    border-radius: 0 4px 4px 0;
+}
+
+.shift * {
+    background-color: rgb(110, 110, 110);
+    color: white;
+    text-decoration: none;
+    padding: 0.2em;
+}
+
+.shift *:hover {
+    background-color: rgb(180, 180, 180);
+}
+
+.manual.shift * {
+    background-color: rgb(80, 80, 140);
+}
+
+.manual.shift *:hover {
+    background-color: rgb(100, 100, 160);
+}
+.delete-btn {
+    /*width: 24px;*/
+    text-decoration: none;
+    color: white;
+    padding: 0.2em;
+}
+.label {
+    display: block;
+}

@@ -2,7 +2,7 @@
     "shifts": [
         {
             "id": 1,
-            "name": "Bar Do 13:30 - 20:00",
+            "name": "Bar Donnerstag 13:30 - 20:00",
             "date": "2019-08-20",
             "starts": "13:30",
             "ends": "20:00",
@@ -12,7 +12,7 @@
         },
         {
             "id": 2,
-            "name": "Bar Fr 13:30 - 19:30",
+            "name": "Bar Freitag 13:30 - 19:30",
             "date": "2019-08-21",
             "starts": "13:30",
             "ends": "19:30",
@@ -22,7 +22,7 @@
         },
         {
             "id": 3,
-            "name": "Bar Fr 19:00 - 02:00",
+            "name": "Bar Freitag 19:00 - 02:00",
             "date": "2019-08-21",
             "starts": "19:00",
             "ends": "02:00",
@@ -32,7 +32,7 @@
         },
         {
             "id": 4,
-            "name": "Bar Sa 13:30 - 19:30",
+            "name": "Bar Samstag 13:30 - 19:30",
             "date": "2019-08-22",
             "starts": "13:30",
             "ends": "19:30",
@@ -42,7 +42,7 @@
         },
         {
             "id": 5,
-            "name": "Bar Sa 19:00 - 02:00",
+            "name": "Bar Samstag 19:00 - 02:00",
             "date": "2019-08-22",
             "starts": "19:00",
             "ends": "02:00",
@@ -52,7 +52,7 @@
         },
         {
             "id": 6,
-            "name": "Merch Do 13:30 - 20:00",
+            "name": "Merchandise Donnerstag 13:30 - 20:00",
             "date": "2019-08-20",
             "starts": "13:30",
             "ends": "20:00",
@@ -62,7 +62,7 @@
         },
         {
             "id": 7,
-            "name": "Merch Fr 13:30 - 19:30",
+            "name": "Merchandise Freitag 13:30 - 19:30",
             "date": "2019-08-21",
             "starts": "13:30",
             "ends": "19:30",
@@ -72,7 +72,7 @@
         },
         {
             "id": 8,
-            "name": "Merch Fr 19:00 - 02:00",
+            "name": "Merchandise Freitag 19:00 - 02:00",
             "date": "2019-08-21",
             "starts": "19:00",
             "ends": "02:00",
@@ -82,7 +82,7 @@
         },
         {
             "id": 9,
-            "name": "Merch Sa 13:30 - 19:30",
+            "name": "Merchandise Samstag 13:30 - 19:30",
             "date": "2019-08-22",
             "starts": "13:30",
             "ends": "19:30",
@@ -92,7 +92,7 @@
         },
         {
             "id": 10,
-            "name": "Merch Sa 19:00 - 02:00",
+            "name": "Merchandise Samstag 19:00 - 02:00",
             "date": "2019-08-22",
             "starts": "19:00",
             "ends": "02:00",
@@ -102,7 +102,7 @@
         },
         {
             "id": 11,
-            "name": "Camping Fr 12:00 - 20:00",
+            "name": "Camping Freitag 12:00 - 20:00",
             "date": "2019-08-21",
             "starts": "12:00",
             "ends": "20:00",
@@ -112,7 +112,7 @@
         },
         {
             "id": 12,
-            "name": "Camping Sa 08:30 - 12:00",
+            "name": "Camping Samstag 08:30 - 12:00",
             "date": "2019-08-22",
             "starts": "08:30",
             "ends": "12:00",
@@ -122,7 +122,7 @@
         },
         {
             "id": 13,
-            "name": "Camping Sa 14:00 - 15:00",
+            "name": "Camping Samstag 14:00 - 15:00",
             "date": "2019-08-22",
             "starts": "14:00",
             "ends": "15:00",
@@ -132,7 +132,7 @@
         },
         {
             "id": 14,
-            "name": "Camping So 08:00 - 14:00",
+            "name": "Camping Sonntag 08:00 - 14:00",
             "date": "2019-08-23",
             "starts": "08:00",
             "ends": "14:00",
@@ -142,7 +142,7 @@
         },
         {
             "id": 15,
-            "name": "Einlass Do 13:30 - 20:00",
+            "name": "Einlass Donnerstag 13:30 - 20:00",
             "date": "2019-08-20",
             "starts": "13:30",
             "ends": "20:00",
@@ -152,7 +152,7 @@
         },
         {
             "id": 16,
-            "name": "Einlass Fr 13:30 - 19:30",
+            "name": "Einlass Freitag 13:30 - 19:30",
             "date": "2019-08-21",
             "starts": "13:30",
             "ends": "19:30",
@@ -162,7 +162,7 @@
         },
         {
             "id": 17,
-            "name": "Einlass Fr 19:00 - 02:00",
+            "name": "Einlass Freitag 19:00 - 02:00",
             "date": "2019-08-21",
             "starts": "19:00",
             "ends": "02:00",
@@ -172,7 +172,7 @@
         },
         {
             "id": 18,
-            "name": "Einlass Sa 13:30 - 19:30",
+            "name": "Einlass Samstag 13:30 - 19:30",
             "date": "2019-08-22",
             "starts": "13:30",
             "ends": "19:30",
@@ -182,7 +182,7 @@
         },
         {
             "id": 19,
-            "name": "Einlass Sa 19:00 - 02:00",
+            "name": "Einlass Samstag 19:00 - 02:00",
             "date": "2019-08-22",
             "starts": "19:00",
             "ends": "02:00",
@@ -192,7 +192,7 @@
         },
         {
             "id": 20,
-            "name": "Troubleshooter Do 13:30 - 20:00",
+            "name": "Troubleshooter Donnerstag 13:30 - 20:00",
             "date": "2019-08-20",
             "starts": "13:30",
             "ends": "20:00",
@@ -202,7 +202,7 @@
         },
         {
             "id": 21,
-            "name": "Troubleshooter Fr 13:30 - 19:30",
+            "name": "Troubleshooter Freitag 13:30 - 19:30",
             "date": "2019-08-21",
             "starts": "13:30",
             "ends": "19:30",
@@ -212,7 +212,7 @@
         },
         {
             "id": 22,
-            "name": "Troubleshooter Fr 19:00 - 02:00",
+            "name": "Troubleshooter Freitag 19:00 - 02:00",
             "date": "2019-08-21",
             "starts": "19:00",
             "ends": "02:00",
@@ -222,7 +222,7 @@
         },
         {
             "id": 23,
-            "name": "Troubleshooter Sa 13:30 - 19:30",
+            "name": "Troubleshooter Samstag 13:30 - 19:30",
             "date": "2019-08-22",
             "starts": "13:30",
             "ends": "19:30",
@@ -232,7 +232,7 @@
         },
         {
             "id": 24,
-            "name": "Troubleshooter Sa 19:00 - 02:00",
+            "name": "Troubleshooter Samstag 19:00 - 02:00",
             "date": "2019-08-22",
             "starts": "19:00",
             "ends": "02:00",
@@ -242,7 +242,7 @@
         },
         {
             "id": 25,
-            "name": "Stagehands Do 12:00 - 20:00",
+            "name": "Stagehands Donnerstag 12:00 - 20:00",
             "date": "2019-08-20",
             "starts": "12:00",
             "ends": "20:00",
@@ -252,7 +252,7 @@
         },
         {
             "id": 26,
-            "name": "Stagehands Fr 12:00 - 00:00",
+            "name": "Stagehands Freitag 12:00 - 00:00",
             "date": "2019-08-21",
             "starts": "12:00",
             "ends": "00:00",
@@ -262,7 +262,7 @@
         },
         {
             "id": 27,
-            "name": "Stagehands Sa 12:00 - 00:00",
+            "name": "Stagehands Samstag 12:00 - 00:00",
             "date": "2019-08-22",
             "starts": "12:00",
             "ends": "00:00",
@@ -272,7 +272,7 @@
         },
         {
             "id": 28,
-            "name": "Trash Heroes Fr 18:00 - 02:00",
+            "name": "Trash Heroes Freitag 18:00 - 02:00",
             "date": "2019-08-21",
             "starts": "18:00",
             "ends": "02:00",
@@ -282,7 +282,7 @@
         },
         {
             "id": 29,
-            "name": "Trash Heroes Sa 18:00 - 02:00",
+            "name": "Trash Heroes Samstag 18:00 - 02:00",
             "date": "2019-08-22",
             "starts": "18:00",
             "ends": "02:00",
@@ -292,7 +292,7 @@
         },
         {
             "id": 30,
-            "name": "Helferbereich Fr 19:00 - 02:00",
+            "name": "Helferbereich Freitag 19:00 - 02:00",
             "date": "2019-08-21",
             "starts": "19:00",
             "ends": "02:00",
@@ -302,7 +302,7 @@
         },
         {
             "id": 31,
-            "name": "Helferbereich Sa 19:00 - 02:00",
+            "name": "Helferbereich Samstag 19:00 - 02:00",
             "date": "2019-08-22",
             "starts": "19:00",
             "ends": "02:00",

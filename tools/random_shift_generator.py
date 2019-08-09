@@ -34,8 +34,10 @@ class Volunteer(object):
         self.over_18 = 'Ja' if not is_minor else 'Nein'
         self.department_whishes = '' if is_minor else multi_choice(3, ('Troubleshooter', 'Einlass', 'Merchandise', 'Bar', 'Stagehand', 'Camping'))
         self.department_whishes_minors = '' if not is_minor else multi_choice(3, ('Troubleshooter', 'Einlass', 'Merchandise', 'Camping'))
-        self.shift_whishes = '' if is_minor else multi_choice(4, ('Donnerstag Früh', 'Freitag Früh', 'Freitag Spät', 'Samstag Früh', 'Samstag Spät'))
-        self.shift_whishes_minors = '' if not is_minor else multi_choice(2, ('Donnerstag Früh', 'Freitag Früh', 'Samstag Früh'))
+        #self.shift_whishes = '' if is_minor else multi_choice(4, ('Donnerstag Früh', 'Freitag Früh', 'Freitag Spät', 'Samstag Früh', 'Samstag Spät'))
+        #self.shift_whishes_minors = '' if not is_minor else multi_choice(2, ('Donnerstag Früh', 'Freitag Früh', 'Samstag Früh'))
+        self.shift_whishes = '' if is_minor else multi_choice(4, ('Donnerstag 13:30 - 20:00', 'Freitag 13:30 - 19:30', 'Freitag 19:00 - 02:00', 'Samstag 13:30 - 19:30', 'Samstag 19:00 - 02:00'))
+        self.shift_whishes_minors = '' if not is_minor else multi_choice(2, ('Donnerstag 13:30 - 19:30', 'Freitag 13:30 - 19:30', 'Samstag 13:30 - 19:30'))
         self.shift_whishes_troubleshooters = multi_choice(2, ('Donnerstag 14:00 - 19:00 Uhr', 'Freitag 14:00 - 02:00 Uhr', 'Samstag 14:00 - 02:00 Uhr'))
         self.shift_whishes_stagehands = multi_choice(2, ('Freitag 12:00 - 20:00 Uhr', 'Samstag 08:30 - 12:00 Uhr', 'Samstag 14:00 - 15:30 Uhr', 'Sonntag 08:00 - 14:00 Uhr'))
         self.shift_whishes_camping = multi_choice(2, ('I', 'forgot', 'what', 'these', 'were'))

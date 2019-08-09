@@ -30,7 +30,17 @@
                         "descriptions": "List of shift ids this volunteer is assigned to",
                         "type": "array",
                         "items": {
-                            "type": "integer"
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "description": "the assigned shift identifier",
+                                    "type": "integer"
+                                },
+                                "manual": {
+                                    "description": "was this shift manually assigned?",
+                                    "type": "boolean"
+                                }
+                            }
                         }
                     },
                     "desired_departments": {

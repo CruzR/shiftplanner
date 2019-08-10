@@ -13,6 +13,13 @@
         </form>
         <div id="app">
             <volunteer-table :volunteers="volunteers"></volunteer-table>
+            <modal-dialog ref="assignShiftDialog">
+                <select id="assignShiftSelection">
+                    <option v-for="shift in shifts" :value="shift.id">{{ shift.name }}</option>
+                </select>
+                <button @click="$refs.assignShiftDialog.visible = false">Cancel</button>
+                <button @click="finishAssignShift">Assign</button>
+            </modal-dialog>
         </div>
         <script id="volunteer_table_template" type="text/x-vue-template">
             <table class="data-table">
@@ -55,6 +62,7 @@
                         </assigned-shift>
                         <br>
                     </template>
+                    <button @click="assignShift">+</button>
                 </td>
                 <td>
                     <span v-for="dept in volunteer.desired_departments">
@@ -82,6 +90,14 @@
                        @click.prevent="deleteAssignment"
                        class="delete-btn right label-component">&#10005;</a>
             </span>
+        </script>
+        <script id="modal_dialog_template" type="text/x-vue-template">
+            <div :class="{ hidden: !visible }">
+                <div class="dialog-background" @click="visible = false"></div>
+                <div class="dialog">
+                    <slot></slot>
+                </div>
+            </div>
         </script>
         <script src="/static/vue.js"></script>
         <script type='module'>
@@ -117,12 +133,22 @@
                     },
                     departmentName: function(deptId) {
                         return window.departmentsById[deptId];
+                    },
+                    assignShift: function() {
+                        this.$root.assignShift(this.volIndex);
                     }
                 }
             });
             Vue.component('volunteer-table', {
                 props: ['volunteers'],
                 template: document.getElementById("volunteer_table_template").textContent
+            });
+
+            Vue.component('modal-dialog', {
+                template: document.getElementById("modal_dialog_template").textContent,
+                data: function() {
+                    return { visible: false };
+                }
             });
 
             var app = new Vue({
@@ -140,7 +166,9 @@
                         { label: 'Max. #', field: 'max_shifts', type: 'number' }
                     ],
                     volunteers: [],
-                    shiftNamesById: {}
+                    shiftNamesById: {},
+                    shifts: [],
+                    dialog_visible: false
                 },
                 computed: {
                 },
@@ -150,12 +178,30 @@
                     },
                     deleteAssignment(e) {
                         debugger;
+                    },
+                    assignShift: function(volIndex) {
+                        this.$refs.assignShiftDialog.volIndex = volIndex;
+                        this.$refs.assignShiftDialog.visible = true;
+                    },
+                    finishAssignShift: function() {
+                        this.$refs.assignShiftDialog.visible = false;
+                        var assignShiftSelection = document.getElementById("assignShiftSelection");
+                        var assignedShift = parseInt(assignShiftSelection.value);
+                        var volIndex = this.$refs.assignShiftDialog.volIndex;
+                        var volunteer = this.volunteers[volIndex];
+                        volunteer.assigned_shifts.push({id: assignedShift, manual: true});
+
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('PUT', '/api/volunteers/' + volunteer.id)
+                        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                        xhr.send(JSON.stringify(volunteer));
                     }
                 }
             });
             var xhr = new XMLHttpRequest();
             xhr.onload = function() {
                 var obj = JSON.parse(xhr.responseText);
+                app.shifts = obj.shifts;
                 var shiftNamesById = {};
                 for (let shift of obj.shifts) {
                     shiftNamesById[shift.id] = shift.name;

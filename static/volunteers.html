@@ -73,7 +73,7 @@
                 <td>
                     <template v-for="shift in volunteer.desired_shifts">
                         <span class="shift label">
-                            <a :href="'/shifts#' + shift" class="label-component">{{shiftName(shift)}}</a>
+                            <a :href="'/shifts/' + shift" class="label-component">{{shiftName(shift)}}</a>
                         </span>
                         <br>
                     </template>
@@ -84,7 +84,7 @@
         </script>
         <script id="assigned_shift_template" type="text/x-vue-template">
             <span :class="{ manual: shift.manual, shift: true, label: true}">
-                <a :href="'/shifts#' + shift.id" class="left label-component">
+                <a :href="'/shifts/' + shift.id" class="left label-component">
                     {{shiftName}}
                 </a><a href="#"
                        @click.prevent="deleteAssignment"

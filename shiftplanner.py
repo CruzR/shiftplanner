@@ -113,6 +113,29 @@ def api_shifts():
 
     return shifts
 
+@app.route('/api/shifts/<int:shift_id>', methods=['PUT'])
+def api_shift(shift_id):
+    if not request.is_json:
+        return {'error': 'request body must be json'}, 400
+    new_shift = request.json
+
+    try:
+        f = open('shifts.pkl', 'rb')
+        with f:
+            shifts = pickle.load(f)
+    except OSError:
+        return {'error': 'shifts.pkl does not exist'}, 500
+
+    for shift in shifts['shifts']:
+        if shift['id'] == new_shift['id']:
+            shift.update(new_shift)
+            break
+
+    with open('shifts.pkl', 'wb') as f:
+        pickle.dump(shifts, f)
+
+    return {'success': True}
+
 @app.route('/api/departments.json')
 def api_departments():
     return send_file('static/sisa_departments.json')

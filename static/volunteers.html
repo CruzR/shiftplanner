@@ -72,9 +72,11 @@
                 </td>
                 <td>
                     <template v-for="shift in volunteer.desired_shifts">
-                        <span class="shift label">
-                            <a :href="'/shifts/' + shift" class="label-component">{{shiftName(shift)}}</a>
-                        </span>
+                        <desired-shift
+                            :shift="shift"
+                            :shift-name="shiftName(shift)"
+                            :vol-index="volIndex">
+                        </desired-shift>
                         <br>
                     </template>
                 </td>
@@ -89,6 +91,15 @@
                 </a><a href="#"
                        @click.prevent="deleteAssignment"
                        class="delete-btn right label-component">&#10005;</a>
+            </span>
+        </script>
+        <script id="desired_shift_template" type="text/x-vue-template">
+            <span class="shift label">
+                <a :href="'/shifts/' + shift" class="left label-component">
+                    {{ shiftName }}
+                </a><a href="#"
+                       class="right label-component"
+                       @click.prevent="quickAssignShift">&#10003;</a>
             </span>
         </script>
         <script id="modal_dialog_template" type="text/x-vue-template">
@@ -118,6 +129,23 @@
                         assignedShifts.splice(this.shiftIndex, 1);
                         var xhr = new XMLHttpRequest();
                         xhr.open('PUT', '/api/volunteers/' + volunteer.id)
+                        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                        xhr.send(JSON.stringify(volunteer));
+                    }
+                }
+            });
+            Vue.component('desired-shift', {
+                props: ['shift', 'shiftName', 'volIndex'],
+                template: document.getElementById("desired_shift_template").textContent,
+                methods: {
+                    quickAssignShift: function() {
+                        var volunteer = this.$root.volunteers[this.volIndex];
+                        var assigned_shifts = volunteer.assigned_shifts.map((s) => s.id);
+                        if (assigned_shifts.indexOf(this.shift) === -1) {
+                            volunteer.assigned_shifts.push({id: this.shift, manual: true});
+                        }
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('PUT', '/api/volunteers/' + volunteer.id);
                         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
                         xhr.send(JSON.stringify(volunteer));
                     }

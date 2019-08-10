@@ -41,10 +41,16 @@
                     <td><input type="number" v-model.number="shift.multiplier"></td>
                 </tr>
                 <tr>
-                    <th>Zugewiesene Helfer</th>
+                    <th>Zugewiesene Helfer ({{ shift.assigned_volunteers.length }})</th>
                     <td>
-                        <ul>
-                            <li v-for="vol in shift.assigned_volunteers">{{ volunteer_names[vol] }}</li>
+                        <ul class="label-list">
+                            <li v-for="vol in shift.assigned_volunteers">
+                                <span class="shift label">
+                                    <a :href="'/volunteers#' + vol" class="left label-component">
+                                        {{ volunteers[vol].firstname + ' ' + volunteers[vol].lastname }}
+                                    </a><a href="#"
+                                           class="delete-btn right label-component">&#10005;</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -61,9 +67,9 @@
                 data: {
                     shift: {
                         name: "Shift Name",
-                        assigned_shifts: [],
-                        volunteer_names: {}
-                    }
+                        assigned_volunteers: []
+                    },
+                    volunteers: {}
                 },
                 el: document.getElementById('app'),
                 methods: {
@@ -80,11 +86,11 @@
             var xhr = new XMLHttpRequest();
             xhr.onload = function() {
                 var obj = JSON.parse(xhr.responseText);
-                var vol_names = {};
+                var volus = {};
                 for (let vol of obj.volunteers) {
-                    vol_names[vol.id] = vol.firstname + ' ' + vol.lastname;
+                    volus[vol.id] = vol
                 }
-                app.volunteer_names = vol_names;
+                app.volunteers = volus;
 
                 var shiftsXhr = new XMLHttpRequest();
                 shiftsXhr.onload = function() {

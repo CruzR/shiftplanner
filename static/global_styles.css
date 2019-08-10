@@ -81,3 +81,8 @@
 .detail-table th {
     text-align: left
 }
+
+.label-list {
+    list-style: none;
+    padding: 0;
+}

@@ -66,6 +66,27 @@ def api_volunteers():
     except OSError:
         return {'error': 'volunteers.pkl does not exist'}, 500
 
+@app.route('/api/volunteers/<int:vol_id>', methods=['PUT'])
+def api_volunteer(vol_id):
+    try:
+        f = open('volunteers.pkl', 'rb')
+        with f:
+            volunteers = pickle.load(f)
+    except OSError:
+        return {'error': 'volunteers.pkl does not exist'}, 500
+
+    if not request.is_json:
+        app.logger.warn(request)
+        return {'error': 'must be json'}, 403
+
+    new_vol = request.get_json()
+    vol_index = [i for i, vol in enumerate(volunteers) if vol['id'] == vol_id][0]
+    volunteers[vol_index] = new_vol
+    with open('volunteers.pkl', 'wb') as f:
+        pickle.dump(volunteers, f)
+
+    return {'success': True}
+
 @app.route('/api/shifts.json')
 def api_shifts():
     return send_file('static/sisa_shifts.json')

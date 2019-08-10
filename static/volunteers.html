@@ -3,7 +3,6 @@
     <head>
         <title>SiSa Helfer</title>
         <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/static/vue-good-table.esm.css">
     <link rel="stylesheet" type="text/css" href="/static/global_styles.css">
     </head>
     <body>
@@ -13,63 +12,132 @@
             <input type="submit">
         </form>
         <div id="app">
-        <vue-good-table
-            :columns="columns"
-            :rows="volunteers"
-            @on-cell-click="onCellClick"
-            class="vgt-table condensed striped">
-            <template slot="table-row" slot-scope="props">
-                <span v-if="props.column.field == 'assigned_shifts'">
-                    <template v-for="shift in props.row.assigned_shifts">
-                        <span :class="{ manual: shift.manual, shift: true, label: true}">
-                            <a :href="'/shifts#' + shift" class="left label-component">
-                                {{shiftName(shift.id)}}
-                            </a><a href="#" class="delete-btn right label-component">&#10005;</a>
-                        </span>
+            <volunteer-table :volunteers="volunteers"></volunteer-table>
+        </div>
+        <script id="volunteer_table_template" type="text/x-vue-template">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nachname</th>
+                        <th>Vorname</th>
+                        <th>U18</th>
+                        <th>Zugewiesene Schichten</th>
+                        <th>Wunschbereiche</th>
+                        <th>Wunschschichten</th>
+                        <th>Min. #</th>
+                        <th>Max. #</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <volunteer-table-row
+                        v-for="(volunteer, index) in volunteers"
+                        :key="volunteer.id"
+                        :volunteer="volunteer"
+                        :vol-index="index">
+                    </volunteer-table-row>
+                </tbody>
+            </table>
+        </script>
+        <script id="volunteer_table_row_template" type="text/x-vue-template">
+            <tr>
+                <td>{{ volunteer.id }}</td>
+                <td>{{ volunteer.lastname }}</td>
+                <td>{{ volunteer.firstname }}</td>
+                <td>{{ formatBoolean(volunteer.isminor) }}</td>
+                <td>
+                    <template v-for="(shift, index) in volunteer.assigned_shifts">
+                        <assigned-shift
+                            :shift="shift"
+                            :shift-name="shiftName(shift.id)"
+                            :shift-index="index"
+                            :vol-index="volIndex">
+                        </assigned-shift>
                         <br>
                     </template>
-                </span>
-                <span v-else-if="props.column.field == 'desired_departments'">
-                    <span v-for="dept in props.row.desired_departments">
+                </td>
+                <td>
+                    <span v-for="dept in volunteer.desired_departments">
                         <a :href="'/departments#' + dept">{{departmentName(dept)}}</a>
                         <br>
                     </span>
-                </span>
-                <span v-else-if="props.column.field == 'desired_shifts'">
-                    <template v-for="shift in props.row.desired_shifts">
+                </td>
+                <td>
+                    <template v-for="shift in volunteer.desired_shifts">
                         <span class="shift label">
                             <a :href="'/shifts#' + shift" class="label-component">{{shiftName(shift)}}</a>
                         </span>
                         <br>
                     </template>
-                </span>
-                <span v-else>
-                    {{props.formattedRow[props.column.field]}}
-                </span>
-            </template>
-        </vue-good-table>
-        </div>
+                </td>
+                <td>{{ volunteer.min_shifts }}</td>
+                <td>{{ volunteer.max_shifts }}</td>
+            </tr>
+        </script>
+        <script id="assigned_shift_template" type="text/x-vue-template">
+            <span :class="{ manual: shift.manual, shift: true, label: true}">
+                <a :href="'/shifts#' + shift.id" class="left label-component">
+                    {{shiftName}}
+                </a><a href="#"
+                       @click.prevent="deleteAssignment"
+                       class="delete-btn right label-component">&#10005;</a>
+            </span>
         </script>
         <script src="/static/vue.js"></script>
         <script type='module'>
             'use strict';
 
-            import VueGoodTablePlugin from '/static/vue-good-table.esm.js'
+            function formatBoolean(value) {
+                return value ? "\u2714" : "\u2716";
+            }
 
-            Vue.use(VueGoodTablePlugin);
+            var assigned_shift_component_src = document.getElementById("assigned_shift_template").textContent;
+            Vue.component('assigned-shift', {
+                props: ['shift', 'shiftName', 'shiftIndex', 'volIndex'],
+                template: assigned_shift_component_src,
+                methods: {
+                    deleteAssignment: function(e) {
+                        var volunteer = window.app.volunteers[this.volIndex];
+                        var assignedShifts = volunteer.assigned_shifts;
+                        assignedShifts.splice(this.shiftIndex, 1);
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('PUT', '/api/volunteers/' + volunteer.id)
+                        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                        xhr.send(JSON.stringify(volunteer));
+                    }
+                }
+            });
+            Vue.component('volunteer-table-row', {
+                props: ['volunteer', 'volIndex'],
+                template: document.getElementById("volunteer_table_row_template").textContent,
+                methods: {
+                    formatBoolean: formatBoolean,
+                    shiftName: function(shiftId) {
+                        return window.shiftNamesById[shiftId]
+                    },
+                    departmentName: function(deptId) {
+                        return window.departmentsById[deptId];
+                    }
+                }
+            });
+            Vue.component('volunteer-table', {
+                props: ['volunteers'],
+                template: document.getElementById("volunteer_table_template").textContent
+            });
+
             var app = new Vue({
                 el: "#app",
                 data: {
                     columns: [
                         { label: 'ID', field: 'id', type: 'number' },
                         { label: 'Nachname', field: 'lastname' },
-            { label: 'Vorname', field: 'firstname' },
+                        { label: 'Vorname', field: 'firstname' },
                         { label: 'U18', field: 'isminor', type: 'boolean', formatFn: (value) => value ? "\u2714" : "\u2716", tdClass: 'vgt-center-align' },
-            { label: 'Zugewiesene Schichten', field: 'assigned_shifts' },
-            { label: 'Wunschbereiche', field: 'desired_departments' },
-            { label: 'Wunschschichten', field: 'desired_shifts' },
-            { label: "Min. #", field: "min_shifts", type: 'number' },
-            { label: 'Max. #', field: 'max_shifts', type: 'number' }
+                        { label: 'Zugewiesene Schichten', field: 'assigned_shifts' },
+                        { label: 'Wunschbereiche', field: 'desired_departments' },
+                        { label: 'Wunschschichten', field: 'desired_shifts' },
+                        { label: "Min. #", field: "min_shifts", type: 'number' },
+                        { label: 'Max. #', field: 'max_shifts', type: 'number' }
                     ],
                     volunteers: [],
                     shiftNamesById: {}
@@ -80,15 +148,8 @@
                     formatBool: function(value) {
                         return value ? "\u2714" : "\u2716";
                     },
-                    onCellClick: function(params) {
-                        console.log(params);
-                        //params.row.volunteers = 0;
-                    },
-                    shiftName: function(shiftId) {
-                        return this.shiftNamesById[shiftId]
-                    },
-                    departmentName: function(deptId) {
-                        return this.departmentsById[deptId];
+                    deleteAssignment(e) {
+                        debugger;
                     }
                 }
             });
@@ -99,7 +160,7 @@
                 for (let shift of obj.shifts) {
                     shiftNamesById[shift.id] = shift.name;
                 }
-                app.shiftNamesById = shiftNamesById;
+                window.shiftNamesById = shiftNamesById;
                 var deptXhr = new XMLHttpRequest();
                 deptXhr.onload = function() {
                     var depts = JSON.parse(deptXhr.responseText);
@@ -107,7 +168,7 @@
                     for (let dept of depts.departments) {
                         deptsById[dept.id] = dept.name;
                     }
-                    app.departmentsById = deptsById;
+                    window.departmentsById = deptsById;
 
                     var volunteersXhr = new XMLHttpRequest();
                     volunteersXhr.onload = function() {

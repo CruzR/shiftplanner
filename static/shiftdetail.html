@@ -45,11 +45,17 @@
                     <td>
                         <ul class="label-list">
                             <li v-for="vol in shift.assigned_volunteers">
-                                <span class="shift label">
-                                    <a :href="'/volunteers#' + vol" class="left label-component">
-                                        {{ volunteers[vol].firstname + ' ' + volunteers[vol].lastname }}
-                                    </a><a href="#"
-                                           class="delete-btn right label-component">&#10005;</a>
+                                <assigned-volunteer :vol="vol"></assigned-volunteer>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Potentielle Helfer ({{ desiring_volunteers.length }})</th>
+                    <td>
+                        <ul class="label-list">
+                            <li v-for="vol in desiring_volunteers">
+                                <free-volunteer :vol="vol"></free-volunteer>
                             </li>
                         </ul>
                     </td>
@@ -57,19 +63,59 @@
             </table>
         <button @click="storeShift">Speichern</button>
         </div>
+        <script id="assigned_volunteer_template" type="text/x-vue-template">
+            <span class="shift label">
+                <a :href="'/volunteers#' + vol" class="left label-component">
+                    {{ $root.volunteers[vol].firstname + ' ' + $root.volunteers[vol].lastname }}
+                </a><a href="#"
+                       class="delete-btn right label-component"
+                       @click.prevent="unassignVolunteer">&#10005;</a>
+            </span>
+        </script>
+        <script id="free_volunteer_template" type="text/x-vue-template">
+            <span class="shift label">
+                <a :href="'/volunteers#' + vol.id" class="left label-component">
+                    {{ vol.firstname + ' ' + vol.lastname }}
+                </a><a href="#"
+                       class="right label-component"
+                       @click.prevent="quickAssignVolunteer">&#10003;</a>
+            </span>
+        </script>
         <script src="/static/vue.js"></script>
         <script type="application/javascript">
             'use strict';
             var pathComponents = window.location.pathname.split('/');
             var shiftId = parseInt(pathComponents[pathComponents.length - 1]);
 
+            Vue.component('assigned-volunteer', {
+                props: ['vol'],
+                template: document.getElementById("assigned_volunteer_template").textContent,
+                methods: {
+                    unassignVolunteer: function() {
+                        var index = this.$root.shift.assigned_volunteers.indexOf(this.vol);
+                        if (index != -1) {
+                            this.$root.shift.assigned_volunteers.splice(index, 1);
+                        }
+                    }
+                }
+            });
+            Vue.component('free-volunteer', {
+                props: ['vol'],
+                template: document.getElementById("free_volunteer_template").textContent,
+                methods: {
+                    quickAssignVolunteer: function() {
+                        this.$root.shift.assigned_volunteers.push(this.vol.id);
+                    }
+                }
+            });
             var app = new Vue({
                 data: {
                     shift: {
                         name: "Shift Name",
                         assigned_volunteers: []
                     },
-                    volunteers: {}
+                    volunteers: {},
+                    desiring_volunteers: []
                 },
                 el: document.getElementById('app'),
                 methods: {
@@ -91,6 +137,7 @@
                     volus[vol.id] = vol
                 }
                 app.volunteers = volus;
+                app.desiring_volunteers = obj.volunteers.filter((v) => v.desired_shifts.some((s) => s == shiftId));
 
                 var shiftsXhr = new XMLHttpRequest();
                 shiftsXhr.onload = function() {
@@ -110,4 +157,4 @@
         </script>
     </body>
 </html>
-<!-- vim: set ts=4 sw=4 et -->
+<!-- vim: set ts=4 sw=4 et: -->

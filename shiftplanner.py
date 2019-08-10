@@ -134,8 +134,27 @@ def api_shift(shift_id):
             shift.update(new_shift)
             break
 
+    try:
+        f = open('volunteers.pkl', 'rb')
+        with f:
+            volunteers = pickle.load(f)
+    except OSError:
+        return {'error': 'volunteers.pkl does not exist'}, 500
+
+    for vol in volunteers:
+        assigned_shifts = [s['id'] for s in vol['assigned_shifts']]
+        if vol['id'] in new_shift['assigned_volunteers']:
+            if not new_shift['id'] in assigned_shifts:
+                vol['assigned_shifts'].append({'id': new_shift['id'], 'manual': True})
+        elif new_shift['id'] in assigned_shifts:
+            index = assigned_shifts.index(new_shift['id'])
+            del vol['assigned_shifts'][index:index+1]
+
     with open('shifts.pkl', 'wb') as f:
         pickle.dump(shifts, f)
+
+    with open('volunteers.pkl', 'wb') as f:
+        pickle.dump(volunteers, f)
 
     return {'success': True}
 

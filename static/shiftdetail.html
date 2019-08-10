@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Schicht-Detailansicht</title>
+        <link rel="stylesheet" href="/static/global_styles.css">
+    </head>
+    <body>
+        <div id="app">
+            <h1>{{ shift.name }}</h1>
+            <table class="detail-table">
+                <tr>
+                    <th>ID</th>
+                    <td>{{ shift.id }}</td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ shift.name }}</td>
+                </tr>
+                <tr>
+                    <th>Datum</th>
+                    <td>{{ shift.date }}</td>
+                </tr>
+                <tr>
+                    <th>Schichtbeginn</th>
+                    <td>{{ shift.starts }}</td>
+                </tr>
+                <tr>
+                    <th>Schichtende</th>
+                    <td>{{ shift.ends }}</td>
+                </tr>
+                <tr>
+                    <th>U18</th>
+                    <td>{{ shift.minors }}</td>
+                </tr>
+                <tr>
+                    <th>Anzahl Helfer</th>
+                    <td>{{ shift.volunteers }}</td>
+                </tr>
+                <tr>
+                    <th>Faktor</th>
+                    <td>{{ shift.multiplier }}</td>
+                </tr>
+                <tr>
+                    <th>Zugewiesene Helfer</th>
+                    <td>
+                        <ul>
+                            <li v-for="vol in shift.assigned_volunteers">{{ volunteer_names[vol] }}</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script src="/static/vue.js"></script>
+        <script type="application/javascript">
+            'use strict';
+            var pathComponents = window.location.pathname.split('/');
+            var shiftId = parseInt(pathComponents[pathComponents.length - 1]);
+
+            var app = new Vue({
+                data: {
+                    shift: {
+                        name: "Shift Name",
+                        assigned_shifts: [],
+                        volunteer_names: {}
+                    }
+                },
+                el: document.getElementById('app')
+            });
+            window.app = app;
+
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var obj = JSON.parse(xhr.responseText);
+                var vol_names = {};
+                for (let vol of obj.volunteers) {
+                    vol_names[vol.id] = vol.firstname + ' ' + vol.lastname;
+                }
+                app.volunteer_names = vol_names;
+
+                var shiftsXhr = new XMLHttpRequest();
+                shiftsXhr.onload = function() {
+                    var obj = JSON.parse(shiftsXhr.responseText);
+                    for (let shift of obj['shifts']) {
+                        if (shift.id == shiftId) {
+                            app.shift = shift;
+                            break;
+                        }
+                    }
+                }
+                shiftsXhr.open('GET', '/api/shifts.json');
+                shiftsXhr.send();
+            }
+            xhr.open('GET', '/api/volunteers.json');
+            xhr.send();
+        </script>
+    </body>
+</html>
+<!-- vim: set ts=4 sw=4 et -->

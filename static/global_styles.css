@@ -77,3 +77,7 @@
 .hidden {
     display: none
 }
+
+.detail-table th {
+    text-align: left
+}

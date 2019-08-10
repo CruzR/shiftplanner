@@ -15,6 +15,10 @@ app = Flask(__name__)
 def shifts():
     return send_file('static/shiftviewer.html')
 
+@app.route('/shifts/<int:shift_id>')
+def shift(shift_id):
+    return send_file('static/shiftdetail.html')
+
 @app.route('/departments')
 def departments():
     return send_file('static/departments.html')

@@ -94,8 +94,11 @@ def api_volunteer(vol_id):
 
     assigned_shifts = [s['id'] for s in new_vol['assigned_shifts']]
     for shift in shifts['shifts']:
-        if shift['id'] in assigned_shifts and new_vol['id'] not in shift['assigned_volunteers']:
-            shift['assigned_volunteers'].append(new_vol['id'])
+        if shift['id'] in assigned_shifts:
+            if new_vol['id'] not in shift['assigned_volunteers']:
+                shift['assigned_volunteers'].append(new_vol['id'])
+        elif new_vol['id'] in shift['assigned_volunteers']:
+            shift['assigned_volunteers'].remove(new_vol['id'])
 
     with open('shifts.pkl', 'wb') as f:
         pickle.dump(shifts, f)

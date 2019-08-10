@@ -44,9 +44,16 @@
                     "multiplier": {
                         "description": "How many standard shifts this shift is worth",
                         "type": "integer"
+                    },
+                    "assigned_volunteers": {
+                        "description": "IDs of volunteers assigned to this shift",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
                     }
                 },
-                "required": ["id", "name", "date", "starts", "ends", "minors", "volunteers", "multiplier"]
+                "required": ["id", "name", "date", "starts", "ends", "minors", "volunteers", "multiplier", "assigned_volunteers"]
             }
         }
     }

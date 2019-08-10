@@ -23,6 +23,14 @@
             :rows="shifts"
             @on-cell-click="onCellClick"
             class="vgt-table condensed striped">
+            <template slot="table-row" slot-scope="props">
+                <span v-if="props.column.field == 'volunteers'">
+                    {{ props.row.assigned_volunteers.length }} / {{ props.row.volunteers }}
+                </span>
+                <span v-else>
+                    {{ props.formattedRow[props.column.field] }}
+                </span>
+            </template>
         </vue-good-table>
         <!--
             <table>

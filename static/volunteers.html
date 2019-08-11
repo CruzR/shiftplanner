@@ -17,23 +17,23 @@
                 <select id="assignShiftSelection">
                     <option v-for="shift in shifts" :value="shift.id">{{ shift.name }}</option>
                 </select>
-                <button @click="$refs.assignShiftDialog.visible = false">Cancel</button>
-                <button @click="finishAssignShift">Assign</button>
+                <button @click="$refs.assignShiftDialog.visible = false">{{ tr("Cancel") }}</button>
+                <button @click="finishAssignShift">{{ tr("Assign") }}</button>
             </modal-dialog>
         </div>
         <script id="volunteer_table_template" type="text/x-vue-template">
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nachname</th>
-                        <th>Vorname</th>
-                        <th>U18</th>
-                        <th>Zugewiesene Schichten</th>
-                        <th>Wunschbereiche</th>
-                        <th>Wunschschichten</th>
-                        <th>Min. #</th>
-                        <th>Max. #</th>
+                        <th>{{ $root.tr("ID") }}</th>
+                        <th>{{ $root.tr("Last Name") }}</th>
+                        <th>{{ $root.tr("First Name") }}</th>
+                        <th>{{ $root.tr("Minors") }}</th>
+                        <th>{{ $root.tr("Assigned Shifts") }}</th>
+                        <th>{{ $root.tr("Desired Departments") }}</th>
+                        <th>{{ $root.tr("Desired Shifts") }}</th>
+                        <th>{{ $root.tr("Min. #") }}</th>
+                        <th>{{ $root.tr("Max. #") }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,6 +111,7 @@
             </div>
         </script>
         <script src="/static/vue.js"></script>
+        <script src="/static/translate.js"></script>
         <script type='module'>
             'use strict';
 
@@ -224,6 +225,8 @@
                         xhr.open('PUT', '/api/volunteers/' + volunteer.id)
                         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
                         xhr.send(JSON.stringify(volunteer));
+                    },
+                    tr: function() {
                     }
                 }
             });
@@ -253,6 +256,12 @@
                 .then(function(response) { return response.json(); })
                 .then(function(json) {
                     app.volunteers = json.volunteers;
+                })
+            );
+            open_requests.push(fetch('/static/translations.json')
+                .then(function(response) { return response.json(); })
+                .then(function(translations) {
+                    app.tr = Translator(translations, "de");
                 })
             );
             Promise.all(open_requests).then(function() { app.loaded = true; });

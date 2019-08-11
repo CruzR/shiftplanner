@@ -1,0 +1,15 @@
+{
+    "de": {
+        "ID": "ID",
+        "Last Name": "Nachname",
+        "First Name": "Vorname",
+        "Minors": "U18",
+        "Assigned Shifts": "Zugewiesene Schichten",
+        "Desired Departments": "Wunschbereiche",
+        "Desired Shifts": "Wunschschichten",
+        "Min. #": "Min. #",
+        "Max. #": "Max. #",
+	"Cancel": "Abbrechen",
+	"Assign": "Zuweisen"
+    }
+}

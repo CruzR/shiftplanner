@@ -7,11 +7,13 @@
     </head>
     <body>
         <h1>SiSa Helfer</h1>
-        <form method="POST" action="/volunteers" enctype="multipart/form-data">
-            <input type="file" name="volunteers_csv">
-            <input type="submit">
-        </form>
         <div id="app" v-if="loaded">
+            <div class="action-bar">
+                <button
+                    @click="$refs.uploadCsvDialog.visible = true">
+                    {{ tr("Upload CSV") }} &#8613;
+                </button>
+            </div>
             <volunteer-table :volunteers="volunteers"></volunteer-table>
             <modal-dialog ref="assignShiftDialog">
                 <select id="assignShiftSelection">
@@ -19,6 +21,12 @@
                 </select>
                 <button @click="$refs.assignShiftDialog.visible = false">{{ tr("Cancel") }}</button>
                 <button @click="finishAssignShift">{{ tr("Assign") }}</button>
+            </modal-dialog>
+            <modal-dialog ref="uploadCsvDialog">
+                <form method="POST" action="/volunteers" enctype="multipart/form-data">
+                    <input type="file" name="volunteers_csv">
+                    <input type="submit" :value="tr('Upload') + ' &#8613;'">
+                </form>
             </modal-dialog>
         </div>
         <script id="volunteer_table_template" type="text/x-vue-template">

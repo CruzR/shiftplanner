@@ -20,6 +20,8 @@
 	"Multiplier": "Faktor",
 	"Assigned Volunteers": "Zugewiesene Helfer",
 	"Possible Volunteers": "Potentielle Helfer",
-	"Save": "Speichern"
+	"Save": "Speichern",
+	"Upload": "Hochladen",
+	"Upload CSV": "CSV Hochladen"
     }
 }

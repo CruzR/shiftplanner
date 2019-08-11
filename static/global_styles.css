@@ -92,7 +92,8 @@
 }
 
 .detail-table th {
-    text-align: left
+    text-align: left;
+    vertical-align: top;
 }
 
 .label-list {

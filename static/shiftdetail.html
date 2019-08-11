@@ -5,43 +5,43 @@
         <link rel="stylesheet" href="/static/global_styles.css">
     </head>
     <body>
-        <div id="app">
+        <div id="app" v-if="loaded">
             <h1>{{ shift.name }}</h1>
             <table class="detail-table">
                 <tr>
-                    <th>ID</th>
+                    <th>{{ tr("ID") }}</th>
                     <td>{{ shift.id }}</td>
                 </tr>
                 <tr>
-                    <th>Name</th>
+                    <th>{{ tr("Name") }}</th>
                     <td><input type="text" v-model="shift.name"></td>
                 </tr>
                 <tr>
-                    <th>Datum</th>
+                    <th>{{ tr("Date") }}</th>
                     <td><input type="date" v-model="shift.date"></td>
                 </tr>
                 <tr>
-                    <th>Schichtbeginn</th>
+                    <th>{{ tr("Shift starts") }}</th>
                     <td><input type="time" v-model="shift.starts"></td>
                 </tr>
                 <tr>
-                    <th>Schichtende</th>
+                    <th>{{ tr("Shift ends") }}</th>
                     <td><input type="time" v-model="shift.ends"></td>
                 </tr>
                 <tr>
-                    <th>U18</th>
+                    <th>{{ tr("Minor") }}</th>
                     <td><input type="checkbox" v-model="shift.minors"></td>
                 </tr>
                 <tr>
-                    <th>Anzahl Helfer</th>
+                    <th>{{ tr("Volunteer Count") }}</th>
                     <td><input type="number" v-model.number="shift.volunteers"></td>
                 </tr>
                 <tr>
-                    <th>Faktor</th>
+                    <th>{{ tr("Multiplier") }}</th>
                     <td><input type="number" v-model.number="shift.multiplier"></td>
                 </tr>
                 <tr>
-                    <th>Zugewiesene Helfer ({{ shift.assigned_volunteers.length }})</th>
+                    <th>{{ tr("Assigned Volunteers") }} ({{ shift.assigned_volunteers.length }})</th>
                     <td>
                         <ul class="label-list">
                             <li v-for="vol in shift.assigned_volunteers">
@@ -51,7 +51,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Potentielle Helfer ({{ desiring_volunteers.length }})</th>
+                    <th>{{ tr("Possible Volunteers") }} ({{ desiring_volunteers.length }})</th>
                     <td>
                         <ul class="label-list">
                             <li v-for="vol in desiring_volunteers">
@@ -61,7 +61,7 @@
                     </td>
                 </tr>
             </table>
-        <button @click="storeShift">Speichern</button>
+            <button @click="storeShift">{{ tr("Save") }}</button>
         </div>
         <script id="assigned_volunteer_template" type="text/x-vue-template">
             <span class="shift label">
@@ -82,6 +82,7 @@
             </span>
         </script>
         <script src="/static/vue.js"></script>
+        <script src="/static/translate.js"></script>
         <script type="application/javascript">
             'use strict';
             var pathComponents = window.location.pathname.split('/');
@@ -115,7 +116,8 @@
                         assigned_volunteers: []
                     },
                     volunteers: {},
-                    desiring_volunteers: []
+                    desiring_volunteers: [],
+                    loaded: false
                 },
                 el: document.getElementById('app'),
                 methods: {
@@ -129,31 +131,40 @@
             });
             window.app = app;
 
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function() {
-                var obj = JSON.parse(xhr.responseText);
-                var volus = {};
-                for (let vol of obj.volunteers) {
-                    volus[vol.id] = vol
-                }
-                app.volunteers = volus;
-                app.desiring_volunteers = obj.volunteers.filter((v) => v.desired_shifts.some((s) => s == shiftId));
-
-                var shiftsXhr = new XMLHttpRequest();
-                shiftsXhr.onload = function() {
-                    var obj = JSON.parse(shiftsXhr.responseText);
-                    for (let shift of obj['shifts']) {
+            var open_requests = [];
+            open_requests.push(fetch('/api/volunteers.json')
+                .then(function(response) { return response.json(); })
+                .then(function(json) {
+                    var volus = {};
+                    for (let vol of json.volunteers) {
+                        volus[vol.id] = vol
+                    }
+                    app.volunteers = volus;
+                    app.desiring_volunteers = json.volunteers.filter(
+                        (v) => v.desired_shifts.some((s) => s == shiftId)
+                    );
+                })
+            );
+            open_requests.push(fetch('/api/shifts.json')
+                .then(function(response) { return response.json(); })
+                .then(function(json) {
+                    for (let shift of json.shifts) {
                         if (shift.id == shiftId) {
                             app.shift = shift;
                             break;
                         }
                     }
-                }
-                shiftsXhr.open('GET', '/api/shifts.json');
-                shiftsXhr.send();
-            }
-            xhr.open('GET', '/api/volunteers.json');
-            xhr.send();
+                })
+            );
+            open_requests.push(fetch('/static/translations.json')
+                .then(function(response) { return response.json();})
+                .then(function(translations) {
+                    app.tr = Translator(translations, "de");
+                })
+            );
+            Promise.all(open_requests).then(function() {
+                app.loaded = true;
+            });
         </script>
     </body>
 </html>

@@ -10,6 +10,16 @@
         "Min. #": "Min. #",
         "Max. #": "Max. #",
 	"Cancel": "Abbrechen",
-	"Assign": "Zuweisen"
+	"Assign": "Zuweisen",
+	"Name": "Name",
+	"Date": "Datum",
+	"Shift starts": "Schichtbeginn",
+	"Shift ends": "Schichtende",
+	"Minor": "U18",
+	"Volunteer Count": "Anzahl Helfer",
+	"Multiplier": "Faktor",
+	"Assigned Volunteers": "Zugewiesene Helfer",
+	"Possible Volunteers": "Potentielle Helfer",
+	"Save": "Speichern"
     }
 }

@@ -15,14 +15,14 @@
                 </button>
             </div>
             <volunteer-table :volunteers="volunteers"></volunteer-table>
-            <modal-dialog ref="assignShiftDialog">
+            <modal-dialog :title="tr('Assign Shift')" ref="assignShiftDialog">
                 <select id="assignShiftSelection">
                     <option v-for="shift in shifts" :value="shift.id">{{ shift.name }}</option>
                 </select>
                 <button @click="$refs.assignShiftDialog.visible = false">{{ tr("Cancel") }}</button>
                 <button @click="finishAssignShift">{{ tr("Assign") }}</button>
             </modal-dialog>
-            <modal-dialog ref="uploadCsvDialog">
+            <modal-dialog :title="tr('Upload CSV')" ref="uploadCsvDialog">
                 <form method="POST" action="/volunteers" enctype="multipart/form-data">
                     <input type="file" name="volunteers_csv">
                     <input type="submit" :value="tr('Upload') + ' &#8613;'">
@@ -114,7 +114,10 @@
             <div :class="{ hidden: !visible }">
                 <div class="dialog-background" @click="visible = false"></div>
                 <div class="dialog">
-                    <slot></slot>
+                    <h2 class="dialog-title">{{ title }}</h2>
+                    <div class="dialog-content">
+                        <slot></slot>
+                    </div>
                 </div>
             </div>
         </script>
@@ -182,6 +185,7 @@
             });
 
             Vue.component('modal-dialog', {
+                props: ['title'],
                 template: document.getElementById("modal_dialog_template").textContent,
                 data: function() {
                     return { visible: false };

@@ -74,6 +74,16 @@
     box-shadow: 5px 5px 10px black;
 }
 
+.dialog-title {
+    margin: 0;
+    padding: 0.3rem;
+    border-bottom: 1px solid gray;
+}
+
+.dialog-content {
+    padding: 0.3rem;
+}
+
 .hidden {
     display: none
 }

@@ -61,16 +61,17 @@
                 <td>{{ volunteer.firstname }}</td>
                 <td>{{ formatBoolean(volunteer.isminor) }}</td>
                 <td>
-                    <template v-for="(shift, index) in volunteer.assigned_shifts">
-                        <assigned-shift
-                            :shift="shift"
-                            :shift-name="shiftName(shift.id)"
-                            :shift-index="index"
-                            :vol-index="volIndex">
-                        </assigned-shift>
-                        <br>
-                    </template>
-                    <button @click="assignShift">+</button>
+                    <ul class="label-list">
+                        <li v-for="(shift, index) in volunteer.assigned_shifts">
+                            <assigned-shift
+                                :shift="shift"
+                                :shift-name="shiftName(shift.id)"
+                                :shift-index="index"
+                                :vol-index="volIndex">
+                            </assigned-shift>
+                        </li>
+                        <li><button @click="assignShift">+</button></li>
+                    </ul>
                 </td>
                 <td>
                     <span v-for="dept in volunteer.desired_departments">
@@ -79,14 +80,15 @@
                     </span>
                 </td>
                 <td>
-                    <template v-for="shift in volunteer.desired_shifts">
-                        <desired-shift
-                            :shift="shift"
-                            :shift-name="shiftName(shift)"
-                            :vol-index="volIndex">
-                        </desired-shift>
-                        <br>
-                    </template>
+                    <ul class="label-list">
+                        <li v-for="shift in volunteer.desired_shifts">
+                            <desired-shift
+                                :shift="shift"
+                                :shift-name="shiftName(shift)"
+                                :vol-index="volIndex">
+                            </desired-shift>
+                        </li>
+                    </ul>
                 </td>
                 <td>{{ volunteer.min_shifts }}</td>
                 <td>{{ volunteer.max_shifts }}</td>

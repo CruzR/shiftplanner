@@ -11,7 +11,7 @@
             <input type="file" name="volunteers_csv">
             <input type="submit">
         </form>
-        <div id="app">
+        <div id="app" v-if="loaded">
             <volunteer-table :volunteers="volunteers"></volunteer-table>
             <modal-dialog ref="assignShiftDialog">
                 <select id="assignShiftSelection">
@@ -196,7 +196,8 @@
                     volunteers: [],
                     shiftNamesById: {},
                     shifts: [],
-                    dialog_visible: false
+                    dialog_visible: false,
+                    loaded: false
                 },
                 computed: {
                 },
@@ -226,38 +227,38 @@
                     }
                 }
             });
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function() {
-                var obj = JSON.parse(xhr.responseText);
-                app.shifts = obj.shifts;
-                var shiftNamesById = {};
-                for (let shift of obj.shifts) {
-                    shiftNamesById[shift.id] = shift.name;
-                }
-                window.shiftNamesById = shiftNamesById;
-                var deptXhr = new XMLHttpRequest();
-                deptXhr.onload = function() {
-                    var depts = JSON.parse(deptXhr.responseText);
+            var open_requests = [];
+            open_requests.push(fetch('/api/shifts.json')
+                .then(function(response) { return response.json(); })
+                .then(function(json) {
+                    app.shifts = json.shifts;
+                    var shiftNamesById = {};
+                    for (let shift of json.shifts) {
+                        shiftNamesById[shift.id] = shift.name;
+                    }
+                    window.shiftNamesById = shiftNamesById;
+                })
+            );
+            open_requests.push(fetch('/api/departments.json')
+                .then(function(response) { return response.json(); })
+                .then(function(depts) {
                     var deptsById = {};
                     for (let dept of depts.departments) {
                         deptsById[dept.id] = dept.name;
                     }
                     window.departmentsById = deptsById;
+                })
+            );
+            open_requests.push(fetch('/api/volunteers.json')
+                .then(function(response) { return response.json(); })
+                .then(function(json) {
+                    app.volunteers = json.volunteers;
+                })
+            );
+            Promise.all(open_requests).then(function() { app.loaded = true; });
 
-                    var volunteersXhr = new XMLHttpRequest();
-                    volunteersXhr.onload = function() {
-                        var obj = JSON.parse(volunteersXhr.responseText);
-                        app.volunteers = obj.volunteers;
-                    };
-                    volunteersXhr.open('GET', '/api/volunteers.json');
-                    volunteersXhr.send();
-                }
-                deptXhr.open('GET', '/api/departments.json');
-                deptXhr.send();
-            };
-            xhr.open('GET', '/api/shifts.json');
-            xhr.send();
             window.app = app;
         </script>
     </body>
 </html>
+<!-- vim: set ts=4 sw=4 et: -->

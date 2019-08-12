@@ -3,11 +3,18 @@
     <head>
         <title>SiSa Bereiche</title>
         <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/static/vue-good-table.esm.css">
+        <link rel="stylesheet" type="text/css" href="/static/vue-good-table.esm.css">
+        <link rel="stylesheet" href="/static/global_styles.css">
     </head>
     <body>
-        <h1>SiSa Bereiche</h1>
         <div id="app" v-if="loaded">
+            <div class="tab-bar">
+                <ul class="tab-list">
+                    <li><span class="current tab">{{ tr("Departments") }}</span></li>
+                    <li><a class="tab" href="/shifts">{{ tr("Shifts") }}</a></li>
+                    <li><a class="tab" href="/volunteers">{{ tr("Volunteers") }}</a></li>
+                </ul>
+            </div>
         <vue-good-table
             :columns="columns"
             :rows="departments"
@@ -17,6 +24,7 @@
         </div>
         </script>
         <script src="/static/vue.js"></script>
+        <script src="/static/translate.js"></script>
         <script type='module'>
             'use strict';
 
@@ -54,6 +62,12 @@
                 .then(function(response) { return response.json() })
                 .then(function(json) {
                     app.departments = json.departments;
+                })
+            );
+            open_requests.push(fetch('/static/translations.json')
+                .then(function(response) { return response.json(); })
+                .then(function(translations) {
+                    app.tr = Translator(translations, "de");
                 })
             );
             Promise.all(open_requests).then(function() { app.loaded = true; });

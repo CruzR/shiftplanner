@@ -12,11 +12,18 @@
                 padding-left: 0;
             }
         </style>
+        <link rel="stylesheet" href="/static/global_styles.css">
     <link rel="stylesheet" type="text/css" href="/static/vue-good-table.esm.css">
     </head>
     <body>
-        <h1>SiSa Helferschichten</h1>
         <div id="app" v-if="loaded">
+            <div class="tab-bar">
+                <ul class="tab-list">
+                    <li><a class="tab" href="/departments">{{ tr("Departments") }}</a></li>
+                    <li><span class="current tab">{{ tr("Shifts") }}</span></li>
+                    <li><a class="tab" href="/volunteers">{{ tr("Volunteers") }}</a></li>
+                </ul>
+            </div>
             <p>Insgesamt {{ totalShifts }} Schichten, davon {{ minorShifts }} U18-tauglich.</p>
         <vue-good-table
             :columns="columns"
@@ -77,6 +84,7 @@
             </div>
         </script>
         <script src="/static/vue.js"></script>
+        <script src="/static/translate.js"></script>
         <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
         <script type='module'>
             'use strict';
@@ -132,6 +140,12 @@
                 .then(function(response) { return response.json(); })
                 .then(function(json) {
                     app.shifts = json.shifts;
+                })
+            );
+            open_requests.push(fetch('/static/translations.json')
+                .then(function(response) { return response.json(); })
+                .then(function(translations) {
+                    app.tr = Translator(translations, "de");
                 })
             );
             Promise.all(open_requests).then(function() { app.loaded = true; });

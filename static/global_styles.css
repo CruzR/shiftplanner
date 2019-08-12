@@ -1,3 +1,7 @@
+body {
+    margin: 0;
+}
+
 .label-component {
     border-radius: 4px;
 }
@@ -100,4 +104,37 @@
     list-style: none;
     padding: 0;
     margin: 0;
+}
+
+.tab-bar {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-family: "Noto Sans", sans;
+}
+
+.tab-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    border-bottom: 1px solid gray;
+    padding-left: 5px;
+}
+
+.tab-list .tab {
+    padding: 5px;
+    text-decoration: none;
+    color: black;
+    display: block;
+    border-top: 1px solid transparent;
+}
+
+.tab-list .tab:hover {
+    background-color: gray;
+    color: white;
+}
+
+.tab-list .current.tab {
+    border: 1px solid gray;
+    border-bottom: none;
 }

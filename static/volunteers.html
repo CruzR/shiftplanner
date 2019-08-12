@@ -6,8 +6,14 @@
     <link rel="stylesheet" type="text/css" href="/static/global_styles.css">
     </head>
     <body>
-        <h1>SiSa Helfer</h1>
         <div id="app" v-if="loaded">
+            <div class="tab-bar">
+                <ul class="tab-list">
+                    <li><a class="tab" href="/departments">{{ tr("Departments") }}</a></li>
+                    <li><a class="tab" href="/shifts">{{ tr("Shifts") }}</a></li>
+                    <li><span class="current tab">{{ tr("Volunteers") }}</span></li>
+                </ul>
+            </div>
             <div class="action-bar">
                 <button
                     @click="$refs.uploadCsvDialog.visible = true">

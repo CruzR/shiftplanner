@@ -16,7 +16,7 @@
     </head>
     <body>
         <h1>SiSa Helferschichten</h1>
-        <div id="app">
+        <div id="app" v-if="loaded">
             <p>Insgesamt {{ totalShifts }} Schichten, davon {{ minorShifts }} U18-tauglich.</p>
         <vue-good-table
             :columns="columns"
@@ -106,7 +106,8 @@
                         { label: 'Anzahl Helfer', field: 'volunteers', type: 'number' },
                         { label: 'Faktor', field: 'multiplier', type: 'number' }
                     ],
-                    shifts: []
+                    shifts: [],
+                    loaded: false
                 },
                 computed: {
                     totalShifts: function() {
@@ -126,13 +127,14 @@
                     }
                 }
             });
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function() {
-                var obj = JSON.parse(xhr.responseText);
-                app.shifts = obj.shifts;
-            };
-            xhr.open('GET', '/api/shifts.json');
-            xhr.send();
+            var open_requests = [];
+            open_requests.push(fetch('/api/shifts.json')
+                .then(function(response) { return response.json(); })
+                .then(function(json) {
+                    app.shifts = json.shifts;
+                })
+            );
+            Promise.all(open_requests).then(function() { app.loaded = true; });
             window.app = app;
         </script>
     </body>

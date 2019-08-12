@@ -7,7 +7,7 @@
     </head>
     <body>
         <h1>SiSa Bereiche</h1>
-        <div id="app">
+        <div id="app" v-if="loaded">
         <vue-good-table
             :columns="columns"
             :rows="departments"
@@ -30,7 +30,8 @@
                         { label: 'ID', field: 'id', type: 'number' },
                         { label: 'Name', field: 'name' },
                     ],
-                    departments: []
+                    departments: [],
+                    loaded: false
                 },
                 computed: {
                 },
@@ -47,13 +48,15 @@
                     }
                 }
             });
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function() {
-                var obj = JSON.parse(xhr.responseText);
-                app.departments = obj.departments;
-            };
-            xhr.open('GET', '/api/departments.json');
-            xhr.send();
+
+            var open_requests = [];
+            open_requests.push(fetch('/api/departments.json')
+                .then(function(response) { return response.json() })
+                .then(function(json) {
+                    app.departments = json.departments;
+                })
+            );
+            Promise.all(open_requests).then(function() { app.loaded = true; });
             window.app = app;
         </script>
     </body>

@@ -34,12 +34,26 @@
             </modal-dialog>
             <modal-dialog :title="tr('Upload CSV')" ref="uploadCsvDialog">
                 <form method="POST" action="/volunteers" enctype="multipart/form-data">
-                    <input type="file" name="volunteers_csv">
-                    <select name="import_plugin">
-                        <option value="sisa_welle_1">Welle 1</option>
-                        <option value="sisa_welle_2">Welle 2</option>
-                        <option value="sisa_welle_3">Welle 3</option>
-                    </select>
+                    <table class="detail-table">
+                        <tr>
+                            <th><label for="volunteers_csv">{{ tr("File") }}</label></th>
+                            <td><input type="file" id="volunteers_csv" name="volunteers_csv"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="import_plugin">{{ tr("Import Plugin") }}</label></th>
+                            <td>
+                                <select id="import_plugin" name="import_plugin">
+                                    <option value="sisa_welle_1">Welle 1</option>
+                                    <option value="sisa_welle_2">Welle 2</option>
+                                    <option value="sisa_welle_3">Welle 3</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="keep_entries">{{ tr("Keep Current Entries") }}</label></th>
+                            <td><input type="checkbox" id="keep_entries" name="keep_entries" checked></td>
+                        </tr>
+                    </table>
                     <input type="submit" :value="tr('Upload') + ' &#8613;'">
                 </form>
             </modal-dialog>

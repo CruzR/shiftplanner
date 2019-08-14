@@ -27,6 +27,9 @@
 	"Volunteers": "Helfer",
 	"Shifts": "Schichten",
 	"Departments": "Bereiche",
-	"Delete": "Löschen"
+	"Delete": "Löschen",
+	"File": "Datei",
+	"Import Plugin": "Importer",
+	"Keep Current Entries": "Aktuelle Einträge behalten"
     }
 }

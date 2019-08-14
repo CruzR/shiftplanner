@@ -6,6 +6,13 @@
     </head>
     <body>
         <div id="app" v-if="loaded">
+            <div class="tab-bar">
+                <ul class="tab-list">
+                    <li><a class="tab" href="/departments">{{ tr("Departments") }}</a></li>
+                    <li><a class="tab" href="/shifts">{{ tr("Shifts") }}</a></li>
+                    <li><a class="tab" href="/volunteers">{{ tr("Volunteers") }}</a></li>
+                </ul>
+            </div>
             <h1>{{ shift.name }}</h1>
             <table class="detail-table">
                 <tr>

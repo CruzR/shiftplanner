@@ -77,8 +77,11 @@ def api_volunteers():
 
     return {'volunteers': volunteers}
 
-@app.route('/api/volunteers/<int:vol_id>', methods=['PUT'])
+@app.route('/api/volunteers/<int:vol_id>', methods=['PUT', 'DELETE'])
 def api_volunteer(vol_id):
+    if request.method == 'DELETE':
+        return api_delete_volunteer(vol_id)
+
     try:
         volunteers = load_value('volunteers')
     except OSError:
@@ -104,6 +107,33 @@ def api_volunteer(vol_id):
                 shift['assigned_volunteers'].append(new_vol['id'])
         elif new_vol['id'] in shift['assigned_volunteers']:
             shift['assigned_volunteers'].remove(new_vol['id'])
+
+    store_value('volunteers', volunteers)
+    store_value('shifts', shifts)
+
+    return {'success': True}
+
+def api_delete_volunteer(vol_id):
+    try:
+        volunteers = load_value('volunteers')
+    except OSError:
+        return {'error': 'volunteers.pkl does not exist'}, 500
+
+    try:
+        shifts = load_value('shifts')
+    except OSError:
+        return {'error': 'shifts.pkl does not exist'}, 500
+
+    for i, vol in enumerate(volunteers):
+        if vol['id'] == vol_id:
+            break
+
+    if volunteers[i]['id'] == vol_id:
+        del volunteers[i]
+
+    for shift in shifts['shifts']:
+        if vol_id in shift['assigned_volunteers']:
+            shift['assigned_volunteers'].remove(vol_id)
 
     store_value('volunteers', volunteers)
     store_value('shifts', shifts)

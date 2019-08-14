@@ -16,6 +16,10 @@
             </div>
             <div class="action-bar">
                 <button
+                    @click="deleteSelectedVolunteers">
+                    {{ tr("Delete") }}
+                </button>
+                <button
                     @click="$refs.uploadCsvDialog.visible = true">
                     {{ tr("Upload CSV") }} &#8613;
                 </button>
@@ -39,6 +43,7 @@
             <table class="data-table">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>{{ $root.tr("ID") }}</th>
                         <th>{{ $root.tr("Last Name") }}</th>
                         <th>{{ $root.tr("First Name") }}</th>
@@ -62,6 +67,7 @@
         </script>
         <script id="volunteer_table_row_template" type="text/x-vue-template">
             <tr>
+                <td><input type="checkbox" :value="volIndex" v-model="$root.selected"></td>
                 <td>{{ volunteer.id }}</td>
                 <td>{{ volunteer.lastname }}</td>
                 <td>{{ volunteer.firstname }}</td>
@@ -218,7 +224,8 @@
                     shiftNamesById: {},
                     shifts: [],
                     dialog_visible: false,
-                    loaded: false
+                    loaded: false,
+                    selected: []
                 },
                 computed: {
                 },
@@ -245,6 +252,18 @@
                         xhr.open('PUT', '/api/volunteers/' + volunteer.id)
                         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
                         xhr.send(JSON.stringify(volunteer));
+                    },
+                    deleteSelectedVolunteers: function() {
+                        var volusToDelete = this.selected.map((index) => this.volunteers[index]);
+                        this.selected.sort();
+                        this.selected.reverse();
+                        for (var index of this.selected) {
+                            this.volunteers.splice(index, 1);
+                        }
+                        this.selected = [];
+                        for (var vol of volusToDelete) {
+                            fetch('/api/volunteers/' + vol.id, { method: 'DELETE' });
+                        }
                     },
                     tr: function() {
                     }

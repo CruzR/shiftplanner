@@ -11,6 +11,9 @@ import sisa_welle_3
 app = Flask(__name__)
 
 
+def begin_transaction():
+    pass
+
 class StorageReadError(Exception):
     pass
 
@@ -25,6 +28,9 @@ def load_value(key):
 def store_value(key, value):
     with open(f'{key}.pkl', 'wb') as f:
         pickle.dump(value, f)
+
+def commit_transaction():
+    pass
 
 
 @app.route('/shifts')
@@ -70,6 +76,7 @@ def parse_volunteers_from_csv(f):
         volunteers.append(sisa_welle_3.convert_row(row, departments, shifts, app.logger))
 
     store_value('volunteers', volunteers)
+    commit_transaction()
 
 def list_volunteers(r):
     return send_file('static/volunteers.html')
@@ -87,6 +94,8 @@ def api_volunteers():
 def api_volunteer(vol_id):
     if request.method == 'DELETE':
         return api_delete_volunteer(vol_id)
+
+    begin_transaction()
 
     try:
         volunteers = load_value('volunteers')
@@ -116,10 +125,12 @@ def api_volunteer(vol_id):
 
     store_value('volunteers', volunteers)
     store_value('shifts', shifts)
+    commit_transaction()
 
     return {'success': True}
 
 def api_delete_volunteer(vol_id):
+    begin_transaction()
     try:
         volunteers = load_value('volunteers')
     except StorageReadError:
@@ -143,6 +154,7 @@ def api_delete_volunteer(vol_id):
 
     store_value('volunteers', volunteers)
     store_value('shifts', shifts)
+    commit_transaction()
 
     return {'success': True}
 
@@ -161,6 +173,7 @@ def api_shift(shift_id):
         return {'error': 'request body must be json'}, 400
     new_shift = request.json
 
+    begin_transaction()
     try:
         shifts = load_value('shifts')
     except StorageReadError:
@@ -187,6 +200,7 @@ def api_shift(shift_id):
 
     store_value('shifts', shifts)
     store_value('volunteers', volunteers)
+    commit_transaction()
 
     return {'success': True}
 

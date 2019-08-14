@@ -4,33 +4,60 @@ import codecs
 import csv
 import itertools
 import pickle
-from flask import Flask, request, jsonify, send_file, json, redirect
+import sqlite3
+from flask import Flask, request, jsonify, send_file, json, redirect, g
 
 import sisa_welle_3
 
 app = Flask(__name__)
 
 
+def init_db():
+    with app.app_context():
+        db = get_db()
+        db.execute('''
+            CREATE TABLE IF NOT EXISTS kvstore
+            (
+                key TEXT UNIQUE NOT NULL,
+                value BLOB NOT NULL
+             )
+             ''')
+        db.commit()
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect('shiftplanner.sqlite')
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
+
 def begin_transaction():
-    pass
+    get_db().execute('BEGIN IMMEDIATE TRANSACTION;')
 
 class StorageReadError(Exception):
     pass
 
 def load_value(key):
-    try:
-        with open(f'{key}.pkl', 'rb') as f:
-            value = pickle.load(f)
-    except OSError as e:
-        raise StorageReadError from e
-    return value
+    c = get_db().cursor()
+    c.execute('SELECT value FROM kvstore WHERE key = ?;', (key,))
+    row = c.fetchone()
+    if row is None:
+        raise StorageReadError
+    return pickle.loads(row[0])
 
 def store_value(key, value):
-    with open(f'{key}.pkl', 'wb') as f:
-        pickle.dump(value, f)
+    c = get_db().cursor()
+    value_bin = sqlite3.Binary(pickle.dumps(value))
+    c.execute('INSERT OR REPLACE INTO kvstore VALUES (?, ?);', (key, value_bin))
 
 def commit_transaction():
-    pass
+    get_db().commit()
 
 
 @app.route('/shifts')

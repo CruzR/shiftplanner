@@ -35,6 +35,11 @@
             <modal-dialog :title="tr('Upload CSV')" ref="uploadCsvDialog">
                 <form method="POST" action="/volunteers" enctype="multipart/form-data">
                     <input type="file" name="volunteers_csv">
+                    <select name="import_plugin">
+                        <option value="sisa_welle_1">Welle 1</option>
+                        <option value="sisa_welle_2">Welle 2</option>
+                        <option value="sisa_welle_3">Welle 3</option>
+                    </select>
                     <input type="submit" :value="tr('Upload') + ' &#8613;'">
                 </form>
             </modal-dialog>

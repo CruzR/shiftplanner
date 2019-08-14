@@ -11,6 +11,12 @@ import sisa_welle_1
 import sisa_welle_2
 import sisa_welle_3
 
+_import_plugins = {
+    'sisa_welle_1': sisa_welle_1,
+    'sisa_welle_2': sisa_welle_2,
+    'sisa_welle_3': sisa_welle_3
+}
+
 app = Flask(__name__)
 
 
@@ -87,11 +93,11 @@ def post_volunteers(r):
     file = r.files['volunteers_csv']
     if file.filename == '':
         return "No selected file"
-    print("file", r.files['volunteers_csv'])
-    v = parse_volunteers_from_csv(file)
+    import_plugin = _import_plugins[r.form['import_plugin']]
+    v = parse_volunteers_from_csv(file, import_plugin)
     return redirect(request.url)
 
-def parse_volunteers_from_csv(f):
+def parse_volunteers_from_csv(f, import_plugin):
     f = codecs.getreader('utf-8-sig')(f)
     reader = csv.reader(f, delimiter=';')
     volunteers = []
@@ -102,7 +108,7 @@ def parse_volunteers_from_csv(f):
         shifts = json.load(f)
     shifts = {s['name']: s['id'] for s in shifts['shifts']}
     for row in itertools.islice(reader, 1, None):
-        vol = sisa_welle_1.convert_row(row, departments, shifts, app.logger)
+        vol = import_plugin.convert_row(row, departments, shifts, app.logger)
         if vol is not None:
             volunteers.append(vol)
 

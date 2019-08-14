@@ -8,33 +8,48 @@ _DEPARTMENTS_COL = 35
 _MINOR_DEPARTMENTS_COL = 37
 _SHIFTS_COL = 38
 _MINOR_SHIFTS_COL = 40
-_TROUBLESHOOTER_SHIFTS_COL = 41
-_STAGEHAND_SHIFTS_COL = 42
-_CAMPING_SHIFTS_COL = 43
+_STAGEHAND_SHIFTS_COL = 41
+_CAMPING_SHIFTS_COL = 42
+_TRASHHERO_SHIFTS_COL = 43
+_CREW_SHIFTS_COL = 44
 
 def convert_row(r, departments, shifts, logger):
+
+    def split(s):
+        return [c.strip() for c in s.split(', ') if c.strip()]
+
     isminor = False if r[_MINOR_COL] == 'Ja' else True
     if isminor:
-        department_col = r[_MINOR_DEPARTMENTS_COL]
+        department_col = split(r[_MINOR_DEPARTMENTS_COL])
     else:
-        department_col = r[_DEPARTMENTS_COL]
+        department_col = split(r[_DEPARTMENTS_COL])
     desired_departments = []
-    for name in department_col.split(', '):
+    for name in department_col:
         if name in departments:
             desired_departments.append(departments[name])
         else:
-            app.logger.warn("Unknown department: {}".format(repr(name)))
+            logger.warn("Unknown department: {}".format(repr(name)))
+
     desired_shifts = []
+
     if isminor:
-        shifts_col = r[_MINOR_SHIFTS_COL]
+        normal_shifts_col = split(r[_MINOR_SHIFTS_COL])
     else:
-        shifts_col = r[_SHIFTS_COL]
-    for dept, shift in itertools.product(department_col.split(', '), shifts_col.split(', ')):
-        name = dept + " " + shift
-        if name in shifts:
-            desired_shifts.append(shifts[name])
-        else:
-            logger.warn("Unknown shift: {}".format(repr(name)))
+        normal_shifts_col = split(r[_SHIFTS_COL])
+
+    special_shifts_col = {'Stagehand': split(r[_STAGEHAND_SHIFTS_COL]),
+                          'Camping': split(r[_CAMPING_SHIFTS_COL]),
+                          'Helferbereich': split(r[_CREW_SHIFTS_COL]),
+                          'Trashhero': split(r[_TRASHHERO_SHIFTS_COL])}
+
+    for dept in department_col:
+        shifts_col = special_shifts_col.get(dept, normal_shifts_col)
+        for shift in shifts_col:
+            name = dept + " " + shift
+            if name in shifts:
+                desired_shifts.append(shifts[name])
+            else:
+                logger.warn("Unknown shift: {}".format(repr(name)))
 
     return {
         'id': int(r[_ID_COL]),

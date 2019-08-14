@@ -6,7 +6,7 @@
         { "id": 4, "name": "Einlass" },
         { "id": 5, "name": "Troubleshooter" },
         { "id": 6, "name": "Stagehand" },
-        { "id": 7, "name": "Trash Heroes" },
-        { "id": 8, "name": "Crewbereich" }
+        { "id": 7, "name": "Trashhero" },
+        { "id": 8, "name": "Helferbereich" }
     ]
 }

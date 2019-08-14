@@ -11,6 +11,16 @@ import sisa_welle_3
 app = Flask(__name__)
 
 
+def load_value(key):
+    with open(f'{key}.pkl', 'rb') as f:
+        value = pickle.load(f)
+    return value
+
+def store_value(key, value):
+    with open(f'{key}.pkl', 'wb') as f:
+        pickle.dump(value, f)
+
+
 @app.route('/shifts')
 def shifts():
     return send_file('static/shiftviewer.html')
@@ -53,9 +63,7 @@ def parse_volunteers_from_csv(f):
     for row in itertools.islice(reader, 1, None):
         volunteers.append(sisa_welle_3.convert_row(row, departments, shifts, app.logger))
 
-    with open('volunteers.pkl', 'wb') as f:
-        pickle.dump(volunteers, f)
-        f.flush()
+    store_value('volunteers', volunteers)
 
 def list_volunteers(r):
     return send_file('static/volunteers.html')
@@ -63,21 +71,23 @@ def list_volunteers(r):
 @app.route('/api/volunteers.json')
 def api_volunteers():
     try:
-        f = open('volunteers.pkl', 'rb')
-        with f:
-            volunteers = pickle.load(f)
-            return {'volunteers': volunteers}
+        volunteers = load_value('volunteers')
     except OSError:
         return {'error': 'volunteers.pkl does not exist'}, 500
+
+    return {'volunteers': volunteers}
 
 @app.route('/api/volunteers/<int:vol_id>', methods=['PUT'])
 def api_volunteer(vol_id):
     try:
-        f = open('volunteers.pkl', 'rb')
-        with f:
-            volunteers = pickle.load(f)
+        volunteers = load_value('volunteers')
     except OSError:
         return {'error': 'volunteers.pkl does not exist'}, 500
+
+    try:
+        shifts = load_value('shifts')
+    except OSError:
+        return {'error': 'shifts.pkl does not exist'}, 500
 
     if not request.is_json:
         app.logger.warn(request)
@@ -86,11 +96,6 @@ def api_volunteer(vol_id):
     new_vol = request.get_json()
     vol_index = [i for i, vol in enumerate(volunteers) if vol['id'] == vol_id][0]
     volunteers[vol_index] = new_vol
-    with open('volunteers.pkl', 'wb') as f:
-        pickle.dump(volunteers, f)
-
-    with open('shifts.pkl', 'rb') as f:
-        shifts = pickle.load(f)
 
     assigned_shifts = [s['id'] for s in new_vol['assigned_shifts']]
     for shift in shifts['shifts']:
@@ -100,17 +105,15 @@ def api_volunteer(vol_id):
         elif new_vol['id'] in shift['assigned_volunteers']:
             shift['assigned_volunteers'].remove(new_vol['id'])
 
-    with open('shifts.pkl', 'wb') as f:
-        pickle.dump(shifts, f)
+    store_value('volunteers', volunteers)
+    store_value('shifts', shifts)
 
     return {'success': True}
 
 @app.route('/api/shifts.json')
 def api_shifts():
     try:
-        f = open('shifts.pkl', 'rb')
-        with f:
-            shifts = pickle.load(f)
+        shifts = load_value('shifts')
     except OSError:
         return {'error': 'shifts.pkl does not exist'}, 500
 
@@ -123,23 +126,19 @@ def api_shift(shift_id):
     new_shift = request.json
 
     try:
-        f = open('shifts.pkl', 'rb')
-        with f:
-            shifts = pickle.load(f)
+        shifts = load_value('shifts')
     except OSError:
         return {'error': 'shifts.pkl does not exist'}, 500
+
+    try:
+        volunteers = load_value('volunteers')
+    except OSError:
+        return {'error': 'volunteers.pkl does not exist'}, 500
 
     for shift in shifts['shifts']:
         if shift['id'] == new_shift['id']:
             shift.update(new_shift)
             break
-
-    try:
-        f = open('volunteers.pkl', 'rb')
-        with f:
-            volunteers = pickle.load(f)
-    except OSError:
-        return {'error': 'volunteers.pkl does not exist'}, 500
 
     for vol in volunteers:
         assigned_shifts = [s['id'] for s in vol['assigned_shifts']]
@@ -150,11 +149,8 @@ def api_shift(shift_id):
             index = assigned_shifts.index(new_shift['id'])
             del vol['assigned_shifts'][index:index+1]
 
-    with open('shifts.pkl', 'wb') as f:
-        pickle.dump(shifts, f)
-
-    with open('volunteers.pkl', 'wb') as f:
-        pickle.dump(volunteers, f)
+    store_value('shifts', shifts)
+    store_value('volunteers', volunteers)
 
     return {'success': True}
 

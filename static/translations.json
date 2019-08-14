@@ -23,6 +23,10 @@
         "Save": "Speichern",
         "Upload": "Hochladen",
         "Upload CSV": "CSV Hochladen",
-        "Assign Shift": "Schicht Zuweisen"
+        "Assign Shift": "Schicht Zuweisen",
+	"Volunteers": "Helfer",
+	"Shifts": "Schichten",
+	"Departments": "Bereiche",
+	"Delete": "Löschen"
     }
 }

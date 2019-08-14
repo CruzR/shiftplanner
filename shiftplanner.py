@@ -7,6 +7,8 @@ import pickle
 import sqlite3
 from flask import Flask, request, jsonify, send_file, json, redirect, g
 
+import sisa_welle_1
+import sisa_welle_2
 import sisa_welle_3
 
 app = Flask(__name__)
@@ -100,7 +102,9 @@ def parse_volunteers_from_csv(f):
         shifts = json.load(f)
     shifts = {s['name']: s['id'] for s in shifts['shifts']}
     for row in itertools.islice(reader, 1, None):
-        volunteers.append(sisa_welle_3.convert_row(row, departments, shifts, app.logger))
+        vol = sisa_welle_1.convert_row(row, departments, shifts, app.logger)
+        if vol is not None:
+            volunteers.append(vol)
 
     store_value('volunteers', volunteers)
     commit_transaction()

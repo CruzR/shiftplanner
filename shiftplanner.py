@@ -11,9 +11,15 @@ import sisa_welle_3
 app = Flask(__name__)
 
 
+class StorageReadError(Exception):
+    pass
+
 def load_value(key):
-    with open(f'{key}.pkl', 'rb') as f:
-        value = pickle.load(f)
+    try:
+        with open(f'{key}.pkl', 'rb') as f:
+            value = pickle.load(f)
+    except OSError as e:
+        raise StorageReadError from e
     return value
 
 def store_value(key, value):
@@ -72,7 +78,7 @@ def list_volunteers(r):
 def api_volunteers():
     try:
         volunteers = load_value('volunteers')
-    except OSError:
+    except StorageReadError:
         return {'error': 'volunteers.pkl does not exist'}, 500
 
     return {'volunteers': volunteers}
@@ -84,12 +90,12 @@ def api_volunteer(vol_id):
 
     try:
         volunteers = load_value('volunteers')
-    except OSError:
+    except StorageReadError:
         return {'error': 'volunteers.pkl does not exist'}, 500
 
     try:
         shifts = load_value('shifts')
-    except OSError:
+    except StorageReadError:
         return {'error': 'shifts.pkl does not exist'}, 500
 
     if not request.is_json:
@@ -116,12 +122,12 @@ def api_volunteer(vol_id):
 def api_delete_volunteer(vol_id):
     try:
         volunteers = load_value('volunteers')
-    except OSError:
+    except StorageReadError:
         return {'error': 'volunteers.pkl does not exist'}, 500
 
     try:
         shifts = load_value('shifts')
-    except OSError:
+    except StorageReadError:
         return {'error': 'shifts.pkl does not exist'}, 500
 
     for i, vol in enumerate(volunteers):
@@ -144,7 +150,7 @@ def api_delete_volunteer(vol_id):
 def api_shifts():
     try:
         shifts = load_value('shifts')
-    except OSError:
+    except StorageReadError:
         return {'error': 'shifts.pkl does not exist'}, 500
 
     return shifts
@@ -157,12 +163,12 @@ def api_shift(shift_id):
 
     try:
         shifts = load_value('shifts')
-    except OSError:
+    except StorageReadError:
         return {'error': 'shifts.pkl does not exist'}, 500
 
     try:
         volunteers = load_value('volunteers')
-    except OSError:
+    except StorageReadError:
         return {'error': 'volunteers.pkl does not exist'}, 500
 
     for shift in shifts['shifts']:

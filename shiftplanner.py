@@ -94,13 +94,32 @@ def post_volunteers(r):
     if file.filename == '':
         return "No selected file"
     import_plugin = _import_plugins[r.form['import_plugin']]
-    v = parse_volunteers_from_csv(file, import_plugin)
+    keep_entries = r.form.get('keep_entries', None) is not None
+    v = parse_volunteers_from_csv(file, import_plugin, keep_entries)
     return redirect(request.url)
 
-def parse_volunteers_from_csv(f, import_plugin):
+def parse_volunteers_from_csv(f, import_plugin, keep_entries):
+    begin_transaction()
+
     f = codecs.getreader('utf-8-sig')(f)
     reader = csv.reader(f, delimiter=';')
-    volunteers = []
+
+    if keep_entries:
+        volunteers = load_value('volunteers')
+        try:
+            deleted_volunteers = load_value('deleted_volunteers')
+        except StorageReadError:
+            deleted_volunteers = set()
+        shifts = load_value('shifts')
+        for shift in shifts['shifts']:
+            shift['assigned_volunteers'] = []
+        store_value('shifts', shifts)
+    else:
+        volunteers = []
+        deleted_volunteers = set()
+
+    existing_volunteers = set(vol['id'] for vol in volunteers)
+
     with open('static/sisa_departments.json') as f:
         departments = json.load(f)
     departments = {d['name']: d['id'] for d in departments['departments']}
@@ -110,9 +129,12 @@ def parse_volunteers_from_csv(f, import_plugin):
     for row in itertools.islice(reader, 1, None):
         vol = import_plugin.convert_row(row, departments, shifts, app.logger)
         if vol is not None:
+            if vol['id'] in existing_volunteers or vol['id'] in deleted_volunteers:
+                continue
             volunteers.append(vol)
 
     store_value('volunteers', volunteers)
+    store_value('deleted_volunteers', deleted_volunteers)
     commit_transaction()
 
 def list_volunteers(r):
@@ -178,6 +200,13 @@ def api_delete_volunteer(vol_id):
     except StorageReadError:
         return {'error': 'shifts.pkl does not exist'}, 500
 
+    try:
+        deleted_volunteers = load_value('deleted_volunteers')
+    except StorageReadError:
+        deleted_volunteers = set()
+
+    deleted_volunteers.add(vol_id)
+
     for i, vol in enumerate(volunteers):
         if vol['id'] == vol_id:
             break
@@ -191,6 +220,7 @@ def api_delete_volunteer(vol_id):
 
     store_value('volunteers', volunteers)
     store_value('shifts', shifts)
+    store_value('deleted_volunteers', deleted_volunteers)
     commit_transaction()
 
     return {'success': True}
